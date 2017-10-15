@@ -12,6 +12,6 @@ targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo
 ps7_init
 ps7_post_config
 targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A6B0A8A"} -index 0
-dow /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/RTOSDemo/Debug/RTOSDemo.elf
+dow /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/logic_analyzer_code/Debug/logic_analyzer_code.elf
 configparams force-mem-access 0
 bpadd -addr &main
