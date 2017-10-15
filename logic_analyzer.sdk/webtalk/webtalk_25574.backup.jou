@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Webtalk v2017.2 (64-bit)
+# SW Build 1909853 on Thu Jun 15 18:39:10 MDT 2017
+# 
+# Start of session at: Fri Oct 13 11:23:14 2017
+# Process ID: 25574
+# Current directory: /home/joseph/school/year4/tutorial_aleph/tutorial_aleph.sdk/webtalk
+# Command line: wbtcv -mode batch -source sdk_webtalk.tcl
+# Log file: /home/joseph/school/year4/tutorial_aleph/tutorial_aleph.sdk/webtalk/webtalk.log
+# Journal file: /home/joseph/school/year4/tutorial_aleph/tutorial_aleph.sdk/webtalk/webtalk.jou
+#-----------------------------------------------------------
+source sdk_webtalk.tcl
