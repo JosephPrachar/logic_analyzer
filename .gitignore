@@ -23,6 +23,8 @@
 !*.sv
 !*.bd
 !*.edif
+!*.project
+!.cproject
 #########
 #IP files
 #########
