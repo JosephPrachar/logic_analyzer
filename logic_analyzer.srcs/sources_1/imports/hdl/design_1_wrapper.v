@@ -31,7 +31,14 @@ module design_1_wrapper
     FIXED_IO_ps_clk,
     FIXED_IO_ps_porb,
     FIXED_IO_ps_srstb,
-    leds);
+    leds,
+    hdmi_out_clk_n,
+    hdmi_out_clk_p,
+    hdmi_out_data_n,
+    hdmi_out_data_p,
+    hdmi_out_ddc_scl_io,
+    hdmi_out_ddc_sda_io
+        );
 //    R_CLOCK,
  //   pattern_tri_o,
    // settings_tri_o);
@@ -56,11 +63,15 @@ module design_1_wrapper
   inout FIXED_IO_ps_clk;
   inout FIXED_IO_ps_porb;
   inout FIXED_IO_ps_srstb;
-  /*output R_CLOCK;
-  output [15:0]pattern_tri_o;
-  output [15:0]settings_tri_o;
-*/
-    output [3:0] leds;
+  output hdmi_out_clk_n;
+  output hdmi_out_clk_p;
+  output [2:0]hdmi_out_data_n;
+  output [2:0]hdmi_out_data_p;
+  inout hdmi_out_ddc_scl_io;
+  inout hdmi_out_ddc_sda_io;
+  output [3:0] leds;
+  
+  
   wire [14:0]DDR_addr;
   wire [2:0]DDR_ba;
   wire DDR_cas_n;
@@ -91,7 +102,16 @@ module design_1_wrapper
      .pattern(pattern_tri_o),
      .settings(settings_tri_o),
      .leds(leds));
-     
+    IOBUF hdmi_out_ddc_scl_iobuf
+          (.I(hdmi_out_ddc_scl_o),
+           .IO(hdmi_out_ddc_scl_io),
+           .O(hdmi_out_ddc_scl_i),
+           .T(hdmi_out_ddc_scl_t));
+     IOBUF hdmi_out_ddc_sda_iobuf
+          (.I(hdmi_out_ddc_sda_o),
+           .IO(hdmi_out_ddc_sda_io),
+           .O(hdmi_out_ddc_sda_i),
+           .T(hdmi_out_ddc_sda_t));
        
   design_1 design_1_i
        (.DDR_addr(DDR_addr),
@@ -117,5 +137,16 @@ module design_1_wrapper
         .FIXED_IO_ps_srstb(FIXED_IO_ps_srstb),
         .Pattern_tri_o(pattern_tri_o),
         .R_CLOCK(R_CLOCK),
-        .Settings_tri_o(settings_tri_o));
+        .Settings_tri_o(settings_tri_o),
+        .HDMI_out_clk_n(hdmi_out_clk_n),
+        .HDMI_out_clk_p(hdmi_out_clk_p),
+        .HDMI_out_data_n(hdmi_out_data_n),
+        .HDMI_out_data_p(hdmi_out_data_p),
+        .HDMI_out_ddc_scl_i(hdmi_out_ddc_scl_i),
+        .HDMI_out_ddc_scl_o(hdmi_out_ddc_scl_o),
+        .HDMI_out_ddc_scl_t(hdmi_out_ddc_scl_t),
+        .HDMI_out_ddc_sda_i(hdmi_out_ddc_sda_i),
+        .HDMI_out_ddc_sda_o(hdmi_out_ddc_sda_o),
+        .HDMI_out_ddc_sda_t(hdmi_out_ddc_sda_t)
+        );
 endmodule

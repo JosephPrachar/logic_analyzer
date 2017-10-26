@@ -194,6 +194,12 @@ int main( void )
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
+
+	//int* bram = XPAR_AXI_BRAM_CTRL_0_S_AXI_BASEADDR;
+	//int a = *bram;
+	//*bram = 0xFF;
+	//int b = *bram;
+
 	/* The mainSELECTED_APPLICATION setting is described at the top	of this
 	file. */
 	#if( mainSELECTED_APPLICATION == 0 )

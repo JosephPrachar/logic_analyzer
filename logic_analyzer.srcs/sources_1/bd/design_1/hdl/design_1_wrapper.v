@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-//Date        : Thu Oct 12 10:50:57 2017
+//Date        : Tue Oct 24 22:27:40 2017
 //Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target design_1_wrapper.bd
 //Design      : design_1_wrapper
@@ -31,7 +31,13 @@ module design_1_wrapper
     FIXED_IO_ps_clk,
     FIXED_IO_ps_porb,
     FIXED_IO_ps_srstb,
+    HDMI_out_clk_n,
+    HDMI_out_clk_p,
+    HDMI_out_data_n,
+    HDMI_out_data_p,
     R_CLOCK,
+    hdmi_out_ddc_scl_io,
+    hdmi_out_ddc_sda_io,
     pattern_tri_o,
     settings_tri_o);
   inout [14:0]DDR_addr;
@@ -55,7 +61,13 @@ module design_1_wrapper
   inout FIXED_IO_ps_clk;
   inout FIXED_IO_ps_porb;
   inout FIXED_IO_ps_srstb;
+  output HDMI_out_clk_n;
+  output HDMI_out_clk_p;
+  output [2:0]HDMI_out_data_n;
+  output [2:0]HDMI_out_data_p;
   output R_CLOCK;
+  inout hdmi_out_ddc_scl_io;
+  inout hdmi_out_ddc_sda_io;
   output [15:0]pattern_tri_o;
   output [15:0]settings_tri_o;
 
@@ -80,7 +92,19 @@ module design_1_wrapper
   wire FIXED_IO_ps_clk;
   wire FIXED_IO_ps_porb;
   wire FIXED_IO_ps_srstb;
+  wire HDMI_out_clk_n;
+  wire HDMI_out_clk_p;
+  wire [2:0]HDMI_out_data_n;
+  wire [2:0]HDMI_out_data_p;
   wire R_CLOCK;
+  wire hdmi_out_ddc_scl_i;
+  wire hdmi_out_ddc_scl_io;
+  wire hdmi_out_ddc_scl_o;
+  wire hdmi_out_ddc_scl_t;
+  wire hdmi_out_ddc_sda_i;
+  wire hdmi_out_ddc_sda_io;
+  wire hdmi_out_ddc_sda_o;
+  wire hdmi_out_ddc_sda_t;
   wire [15:0]pattern_tri_o;
   wire [15:0]settings_tri_o;
 
@@ -106,7 +130,27 @@ module design_1_wrapper
         .FIXED_IO_ps_clk(FIXED_IO_ps_clk),
         .FIXED_IO_ps_porb(FIXED_IO_ps_porb),
         .FIXED_IO_ps_srstb(FIXED_IO_ps_srstb),
+        .HDMI_out_clk_n(HDMI_out_clk_n),
+        .HDMI_out_clk_p(HDMI_out_clk_p),
+        .HDMI_out_data_n(HDMI_out_data_n),
+        .HDMI_out_data_p(HDMI_out_data_p),
+        .HDMI_out_ddc_scl_i(hdmi_out_ddc_scl_i),
+        .HDMI_out_ddc_scl_o(hdmi_out_ddc_scl_o),
+        .HDMI_out_ddc_scl_t(hdmi_out_ddc_scl_t),
+        .HDMI_out_ddc_sda_i(hdmi_out_ddc_sda_i),
+        .HDMI_out_ddc_sda_o(hdmi_out_ddc_sda_o),
+        .HDMI_out_ddc_sda_t(hdmi_out_ddc_sda_t),
         .Pattern_tri_o(pattern_tri_o),
         .R_CLOCK(R_CLOCK),
         .Settings_tri_o(settings_tri_o));
+  IOBUF hdmi_out_ddc_scl_iobuf
+       (.I(hdmi_out_ddc_scl_o),
+        .IO(hdmi_out_ddc_scl_io),
+        .O(hdmi_out_ddc_scl_i),
+        .T(hdmi_out_ddc_scl_t));
+  IOBUF hdmi_out_ddc_sda_iobuf
+       (.I(hdmi_out_ddc_sda_o),
+        .IO(hdmi_out_ddc_sda_io),
+        .O(hdmi_out_ddc_sda_i),
+        .T(hdmi_out_ddc_sda_t));
 endmodule

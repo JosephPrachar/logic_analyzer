@@ -108,6 +108,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "xaxivdma.h"
 
 /* Standard demo includes. */
 #include "partest.h"
@@ -146,6 +147,50 @@ static int hrz = 0;
 
 void main_blinky( void )
 {
+
+	XAxiVdma_Config* config = XAxiVdma_LookupConfig(XPAR_AXI_VDMA_0_DEVICE_ID);
+	XAxiVdma dma = {0};
+	dma.ReadChannel.NumFrames = 1;
+	dma.ReadChannel.BDs[0][0] = (u32)pvPortMalloc(4 * 1920 * 1080);
+	dma.ReadChannel.Hsize = 4 * 1920;
+	dma.ReadChannel.Vsize = 4 * 1080;
+
+	int status = XAxiVdma_CfgInitialize(&dma, config, config->BaseAddress);
+
+	if (status != XST_SUCCESS) {
+		return 1;
+	}
+	XAxiVdma_DmaSetup setup = { 0 };
+	setup.VertSizeInput = dma.ReadChannel.Vsize;
+	setup.HoriSizeInput = dma.ReadChannel.Hsize;
+
+	setup.Stride = dma.ReadChannel.Hsize;
+	setup.FrameDelay = 0;  /* This example does not test frame delay */
+
+	setup.EnableCircularBuf = 1;
+	setup.EnableSync = 1;  /* Gen-Lock */
+
+	setup.PointNum = 0;
+	setup.EnableFrameCounter = 0; /* Endless transfers */
+
+	setup.FixedFrameStoreAddr = 0; /* We are not doing parking */
+	/* Configure the VDMA is per fixed configuration, This configuration is being used by majority
+	 * of customer. Expert users can play around with this if they have different configurations */
+
+	status = XAxiVdma_DmaConfig(&dma, XAXIVDMA_READ, &setup);
+	if (status != XST_SUCCESS) {
+		return 1;
+	}
+	while (1) {
+		status = XAxiVdma_StartReadFrame(&dma, &setup);
+		if (status != XST_SUCCESS) {
+			while (1) ;
+		}
+	}
+	status = XAxiVdma_StartReadFrame(&dma, &setup);
+	if (status != XST_SUCCESS) {
+		return 1;
+	}
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 

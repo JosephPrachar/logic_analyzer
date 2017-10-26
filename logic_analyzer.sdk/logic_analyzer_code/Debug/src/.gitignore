@@ -1,2 +1,6 @@
 /include/
 /FreeRTOS/
+/display_ctrl/
+/dynclk/
+/intc/
+/timer_ps/
