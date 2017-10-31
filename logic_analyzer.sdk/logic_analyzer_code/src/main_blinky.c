@@ -109,6 +109,16 @@
 #include "task.h"
 #include "semphr.h"
 #include "xaxivdma.h"
+#include "display_ctrl/display_ctrl.h"
+#include <stdio.h>
+#include "xuartps.h"
+#include "math.h"
+#include <ctype.h>
+#include <stdlib.h>
+#include "xil_types.h"
+#include "xil_cache.h"
+#include "xparameters.h"
+#include "xaxidma.h"
 
 /* Standard demo includes. */
 #include "partest.h"
@@ -117,9 +127,17 @@
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
+#define DEMO_MAX_FRAME (1920*1080*3)
+#define DEMO_STRIDE (1920 * 3)
+#define DYNCLK_BASEADDR 		XPAR_AXI_DYNCLK_0_BASEADDR
+#define VDMA_ID 				XPAR_AXIVDMA_0_DEVICE_ID
+#define HDMI_OUT_VTC_ID 		XPAR_V_TC_0_DEVICE_ID
+#define SCU_TIMER_ID 			XPAR_SCUTIMER_DEVICE_ID
+#define UART_BASEADDR 			XPAR_PS7_UART_1_BASEADDR
+
 /* The rate at which data is sent to the queue.  The 200ms value is converted
 to ticks using the portTICK_PERIOD_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 4000 / portTICK_PERIOD_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS			( 33 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -129,6 +147,8 @@ the queue empty. */
 /* The LED toggled by the Rx task. */
 #define mainTASK_LED						( 0 )
 
+#define MAX_PKT_LEN		0x20
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -136,6 +156,7 @@ the queue empty. */
  */
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
+void draw_things(u32 width, u32 height, u32 stride, u8 color_offset);
 
 /*-----------------------------------------------------------*/
 
@@ -143,54 +164,83 @@ static void prvQueueSendTask( void *pvParameters );
 static QueueHandle_t xQueue = NULL;
 static int hrz = 0;
 
+DisplayCtrl dispCtrl;
+XAxiVdma vdma;
+u8 frameBuf[DISPLAY_NUM_FRAMES][DEMO_MAX_FRAME] __attribute__((aligned(0x20)));
+u8 *pFrames[DISPLAY_NUM_FRAMES]; //array of pointers to the frame buffers
+
+
+XAxiDma AxiDma;
+u8 buf[8192];
 /*-----------------------------------------------------------*/
 
-void main_blinky( void )
-{
+void main_blinky( void ) {
+	/* Initialize an array of pointers to the 3 frame buffers */
+	int i;
+	for (i = 0; i < DISPLAY_NUM_FRAMES; i++)
+	{
+		pFrames[i] = frameBuf[i];
+	}
 
 	XAxiVdma_Config* config = XAxiVdma_LookupConfig(XPAR_AXI_VDMA_0_DEVICE_ID);
-	XAxiVdma dma = {0};
-	dma.ReadChannel.NumFrames = 1;
-	dma.ReadChannel.BDs[0][0] = (u32)pvPortMalloc(4 * 1920 * 1080);
-	dma.ReadChannel.Hsize = 4 * 1920;
-	dma.ReadChannel.Vsize = 4 * 1080;
-
-	int status = XAxiVdma_CfgInitialize(&dma, config, config->BaseAddress);
-
+	if (!config)
+	{
+		xil_printf("No video DMA found for ID %d\r\n", VDMA_ID);
+		return;
+	}
+	int status = XAxiVdma_CfgInitialize(&vdma, config, config->BaseAddress);
 	if (status != XST_SUCCESS) {
-		return 1;
+		xil_printf("VDMA Configuration Initialization failed %d\r\n", status);
+		return;
 	}
-	XAxiVdma_DmaSetup setup = { 0 };
-	setup.VertSizeInput = dma.ReadChannel.Vsize;
-	setup.HoriSizeInput = dma.ReadChannel.Hsize;
-
-	setup.Stride = dma.ReadChannel.Hsize;
-	setup.FrameDelay = 0;  /* This example does not test frame delay */
-
-	setup.EnableCircularBuf = 1;
-	setup.EnableSync = 1;  /* Gen-Lock */
-
-	setup.PointNum = 0;
-	setup.EnableFrameCounter = 0; /* Endless transfers */
-
-	setup.FixedFrameStoreAddr = 0; /* We are not doing parking */
-	/* Configure the VDMA is per fixed configuration, This configuration is being used by majority
-	 * of customer. Expert users can play around with this if they have different configurations */
-
-	status = XAxiVdma_DmaConfig(&dma, XAXIVDMA_READ, &setup);
+	status = DisplayInitialize(&dispCtrl, &vdma,
+			HDMI_OUT_VTC_ID, DYNCLK_BASEADDR, pFrames, DEMO_STRIDE);
 	if (status != XST_SUCCESS) {
-		return 1;
+		xil_printf("Display Ctrl initialization failed during demo initialization%d\r\n", status);
+		return;
 	}
-	while (1) {
-		status = XAxiVdma_StartReadFrame(&dma, &setup);
-		if (status != XST_SUCCESS) {
-			while (1) ;
-		}
+	DisplaySetMode(&dispCtrl, &VMODE_1600x900);
+	DisplayChangeFrame(&dispCtrl, 0);
+	draw_things(dispCtrl.vMode.width, dispCtrl.vMode.height, DEMO_STRIDE, 0);
+
+	status = DisplayStart(&dispCtrl);
+	if (status != XST_SUCCESS)
+	{
+		xil_printf("Couldn't start display during demo initialization%d\r\n", status);
+		return;
 	}
-	status = XAxiVdma_StartReadFrame(&dma, &setup);
-	if (status != XST_SUCCESS) {
-		return 1;
+
+	/*************************************************************************
+	 * Setup DMA
+	 *************************************************************************/
+
+	XAxiDma_Config *CfgPtr = XAxiDma_LookupConfig(XPAR_AXIDMA_0_DEVICE_ID);
+	if (!CfgPtr) {
+		xil_printf("No config found for %d\r\n", XPAR_AXIDMA_0_DEVICE_ID);
+		return XST_FAILURE;
 	}
+
+	/* Initialize DMA engine */
+	XAxiDma_CfgInitialize(&AxiDma, CfgPtr);
+
+	if(XAxiDma_HasSg(&AxiDma)) {
+		xil_printf("Device configured as Simple mode \r\n");
+		return XST_FAILURE;
+	}
+
+	/* Disable interrupts, we use polling mode
+	 */
+	XAxiDma_IntrDisable(&AxiDma, XAXIDMA_IRQ_ALL_MASK,
+						XAXIDMA_DEVICE_TO_DMA);
+	XAxiDma_IntrDisable(&AxiDma, XAXIDMA_IRQ_ALL_MASK,
+						XAXIDMA_DMA_TO_DEVICE);
+
+	int Status = XAxiDma_SimpleTransfer(&AxiDma,(UINTPTR) buf,
+				4096, XAXIDMA_DEVICE_TO_DMA);
+
+	Xil_DCacheFlushRange((UINTPTR) buf, MAX_PKT_LEN);
+
+
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 
@@ -200,7 +250,8 @@ void main_blinky( void )
 		file. */
 
 		xTaskCreate( prvQueueReceiveTask,				/* The function that implements the task. */
-					"Rx", 								/* The text name assigned to the task - for debug only as it is not used by the kernel. */
+					"Rx",
+					/* The text name assigned to the task - for debug only as it is not used by the kernel. */
 					configMINIMAL_STACK_SIZE, 			/* The size of the stack to allocate to the task. */
 					NULL, 								/* The parameter passed to the task - not used in this case. */
 					mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
@@ -232,6 +283,7 @@ TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 static int period;
 static long temp;
+static u8 color = 0;
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
 
@@ -246,6 +298,8 @@ static long temp;
 			temp = (1000/hrz);
 			vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS);
 			vParTestToggleLED( mainTASK_LED );
+			draw_things(dispCtrl.vMode.width, dispCtrl.vMode.height, DEMO_STRIDE, color);
+			color += 3;
 			period -= 1000/hrz;
 		}
 		/* Send to the queue - causing the queue receive task to unblock and
@@ -273,4 +327,91 @@ const unsigned long ulExpectedValue = 100UL;
 	}
 }
 /*-----------------------------------------------------------*/
+
+void draw_things(u32 width, u32 height, u32 stride, u8 color_offset)
+{
+	/* do work on frame that is not displayed */
+	u8* frame = pFrames[!dispCtrl.curFrame];
+	u32 xcoi, ycoi;
+	u32 iPixelAddr;
+	u8 wRed, wBlue, wGreen;
+	u32 wCurrentInt;
+	double fRed, fBlue, fGreen, fColor;
+	u32 xLeft, xMid, xRight, xInt;
+	u32 yMid, yInt;
+	double xInc, yInc;
+
+	xInt = width / 4; //Four intervals, each with width/4 pixels
+	xLeft = xInt * 3;
+	xMid = xInt * 2 * 3;
+	xRight = xInt * 3 * 3;
+	xInc = 256.0 / ((double) xInt); //256 color intensities are cycled through per interval (overflow must be caught when color=256.0)
+
+	yInt = height / 2; //Two intervals, each with width/2 lines
+	yMid = yInt;
+	yInc = 256.0 / ((double) yInt); //256 color intensities are cycled through per interval (overflow must be caught when color=256.0)
+
+	fBlue = 0.0;
+	fRed = 256.0;
+	for(xcoi = 0; xcoi < (width*3); xcoi+=3)
+	{
+		/*
+		 * Convert color intensities to integers < 256, and trim values >=256
+		 */
+		wRed = (fRed >= 256.0) ? 255 : ((u8) fRed);
+		wBlue = (fBlue >= 256.0) ? 255 : ((u8) fBlue);
+		iPixelAddr = xcoi;
+		fGreen = 0.0;
+		for(ycoi = 0; ycoi < height; ycoi++)
+		{
+
+			wGreen = (fGreen >= 256.0) ? 255 : ((u8) fGreen);
+			frame[iPixelAddr] = color_offset;
+			frame[iPixelAddr + 1] = wBlue;
+			frame[iPixelAddr + 2] = wGreen;
+			if (ycoi < yMid)
+			{
+				fGreen += yInc;
+			}
+			else
+			{
+				fGreen -= yInc;
+			}
+
+			/*
+			 * This pattern is printed one vertical line at a time, so the address must be incremented
+			 * by the stride instead of just 1.
+			 */
+			iPixelAddr += stride;
+		}
+
+		if (xcoi < xLeft)
+		{
+			fBlue = 0.0;
+			fRed -= xInc;
+		}
+		else if (xcoi < xMid)
+		{
+			fBlue += xInc;
+			fRed += xInc;
+		}
+		else if (xcoi < xRight)
+		{
+			fBlue -= xInc;
+			fRed -= xInc;
+		}
+		else
+		{
+			fBlue += xInc;
+			fRed = 0;
+		}
+	}
+	/*
+	 * Flush the framebuffer memory range to ensure changes are written to the
+	 * actual memory, and therefore accessible by the VDMA.
+	 */
+	Xil_DCacheFlushRange((unsigned int) frame, DEMO_MAX_FRAME);
+	/* Will automatically update current frame */
+	DisplayChangeFrame(&dispCtrl, !dispCtrl.curFrame);
+}
 

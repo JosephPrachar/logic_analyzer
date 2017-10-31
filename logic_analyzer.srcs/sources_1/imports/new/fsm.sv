@@ -21,74 +21,57 @@
 
 
 
-module fsm(
-    input clock,
-    input [15:0] pattern,
-    input [15:0] settings,
-    output [3:0] leds
+module data_in(
+    input clk,
+    input [23:0] clk_div,
+    input [7:0] ports,
+    output bram_clk,
+    output [31:0] addr,
+    output [31:0] data,
+    output [3:0] byte_enable,
+    output enable
     );
     
-    logic [29:0] clk_div;
-    logic        newclock;
-    logic [3:0]  state;
-    logic [3:0]  nextstate;
-    logic [3:0]  led_reg;
+    logic [23:0] count = 'd0;
+    logic capture_clock = 'd0;
+    logic [31:0] out_reg;
+    logic enable_reg;
+    logic [1:0] shift_count = 'd0;
+    logic [31:0] addr_reg;
     
-    always @ (posedge clock) begin
-        if (clk_div > 'd10_000_000) begin
-            newclock <= ~newclock;
-            clk_div =  'd0;
+    always_ff @(posedge clk) begin
+        out_reg <= 'hAA;
+        if (addr_reg > 'd10)
+            addr_reg <= 'd0;
+    end
+    
+    always_ff @(posedge clk) begin
+        if (count <= 'd10)
+            count <= count + 'd1;
+        else begin
+            count <= 0;
+            capture_clock = !capture_clock;
         end
-        else
-            clk_div = clk_div + 'b1;
-     end
-     
-     always @(posedge newclock) begin
-        if (settings == 'b0)
-            state = 2'b00;
-        else
-            state = nextstate;
-     end
-     
-     always_comb begin
-        if (settings == 'hff) begin
-            if (state == 3)
-                nextstate = 0;
-            else
-                nextstate = state + 'b1;
-         end
-         else if ((settings < 'd5) & (settings > 'b1))
-            nextstate = settings - 'd1;
-         else if (settings == 'd6)
-            nextstate = 4;
-         else if (settings == 'd7)
-            nextstate = 5;
-         else if (settings == 'd8)
-            nextstate = 6;
-         else if (settings == 'd9)
-            nextstate = 7;
-         else if (settings == 'd10)
-            nextstate = 8;
-         else 
-            nextstate = 'b0;
-      end
-      
-      always @(state, pattern) begin
-        case(state)
-            0: led_reg = pattern [15:12];
-            1: led_reg = pattern [11:8];
-            2: led_reg = pattern [7:4];
-            3: led_reg = pattern [3:0];
-            4: led_reg = {pattern[12], pattern[8], pattern[4], pattern[0]};
-            5: led_reg = {pattern[15], pattern[11], pattern[7], pattern[3]};
-            6: led_reg = pattern[15:12] + pattern[3:0];
-            7: led_reg = pattern[15:12] + pattern[11:8];
-            8: led_reg = pattern[7:4] + pattern[3:0];
-         endcase
-      end
-      
-      assign
-        leds = led_reg;
-       
+    end
+    
+    assign addr = addr_reg;
+    assign data = out_reg;
+    assign enable = enable_reg;
+    assign byte_enable = {capture_clock,capture_clock,capture_clock,capture_clock};
+    assign bram_clk = clk;
+    assign enable = capture_clock;
+   
+//    always_ff @(posedge capture_clock) begin
+//        out_reg = {out_reg[31:8], ports[7:0]};
+//        shift_count = shift_count + 'd1;
+//        if (shift_count < 'd3) begin
+//            addr_reg = addr_reg + 1;
+//            if (addr_reg == 'd2049) 
+//                addr_reg = 'd0;
+//            enable_reg = 'd0;
+//        end else
+//            enable_reg = 'd1;
+//    end
+
 endmodule
 

@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-//Date        : Tue Oct 24 22:27:40 2017
+//Date        : Tue Oct 31 13:52:00 2017
 //Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target design_1_wrapper.bd
 //Design      : design_1_wrapper
@@ -68,8 +68,8 @@ module design_1_wrapper
   output R_CLOCK;
   inout hdmi_out_ddc_scl_io;
   inout hdmi_out_ddc_sda_io;
-  output [15:0]pattern_tri_o;
-  output [15:0]settings_tri_o;
+  output [31:0]pattern_tri_o;
+  output [31:0]settings_tri_o;
 
   wire [14:0]DDR_addr;
   wire [2:0]DDR_ba;
@@ -105,8 +105,8 @@ module design_1_wrapper
   wire hdmi_out_ddc_sda_io;
   wire hdmi_out_ddc_sda_o;
   wire hdmi_out_ddc_sda_t;
-  wire [15:0]pattern_tri_o;
-  wire [15:0]settings_tri_o;
+  wire [31:0]pattern_tri_o;
+  wire [31:0]settings_tri_o;
 
   design_1 design_1_i
        (.DDR_addr(DDR_addr),
