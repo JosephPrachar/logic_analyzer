@@ -1,11 +1,11 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-// Date        : Tue Oct 24 22:31:56 2017
+// Date        : Tue Oct 24 22:31:13 2017
 // Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
-// Command     : write_verilog -force -mode synth_stub
-//               /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.srcs/sources_1/bd/design_1/ip/design_1_auto_ds_2/design_1_auto_ds_2_stub.v
-// Design      : design_1_auto_ds_2
+// Command     : write_verilog -force -mode synth_stub -rename_top design_1_auto_ds_2 -prefix
+//               design_1_auto_ds_2_ design_1_auto_ds_4_stub.v
+// Design      : design_1_auto_ds_4
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7z010clg400-1
 // --------------------------------------------------------------------------------
