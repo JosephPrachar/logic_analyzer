@@ -4,7 +4,7 @@ targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo
 rst -system
 after 3000
 targets -set -filter {jtag_cable_name =~ "Digilent Zybo Z7 210351A6B0A8A" && level==0} -index 1
-fpga -file /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.runs/impl_1/design_1_wrapper.bit
+fpga -file /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/design_1_wrapper_hw_platform_0/design_1_wrapper.bit
 targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo Z7 210351A6B0A8A"} -index 0
 loadhw -hw /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
 configparams force-mem-access 1

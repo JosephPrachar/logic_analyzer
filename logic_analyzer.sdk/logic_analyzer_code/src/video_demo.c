@@ -68,7 +68,7 @@ u8 *pFrames[DISPLAY_NUM_FRAMES]; //array of pointers to the frame buffers
 /*				Procedure Definitions							*/
 /* ------------------------------------------------------------ */
 
-int main1(void)
+int main11(void)
 {
 	DemoInitialize();
 

@@ -187,7 +187,7 @@ XScuGic xInterruptController;
 
 /*-----------------------------------------------------------*/
 
-int main( void )
+int main1( void )
 {
 	/* See http://www.freertos.org/RTOS-Xilinx-Zynq.html for instructions. */
 
