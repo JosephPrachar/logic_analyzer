@@ -148,7 +148,7 @@ volatile static int Error = 0;	/* Dma Error occurs */
 *
 ******************************************************************************/
 #ifndef TESTAPP_GEN
-int main()
+int main1()
 {
 	int Status;
 
@@ -166,7 +166,6 @@ int main()
 	xil_printf("--- Exiting main() --- \r\n");
 
 	return XST_SUCCESS;
-
 }
 #endif
 

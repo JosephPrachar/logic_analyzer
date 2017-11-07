@@ -126,39 +126,12 @@
 #include "xscugic.h"
 #include "xil_exception.h"
 
-/* mainSELECTED_APPLICATION is used to select between three demo applications,
- * as described at the top of this file.
- *
- * When mainSELECTED_APPLICATION is set to 0 the simple blinky example will
- * be run.
- *
- * When mainSELECTED_APPLICATION is set to 1 the comprehensive test and demo
- * application will be run.
- *
- * When mainSELECTED_APPLICATION is set to 2 the lwIP example will be run.
- */
-#define mainSELECTED_APPLICATION	0
-
-/*-----------------------------------------------------------*/
+#include "display.h"
 
 /*
- * Configure the hardware as necessary to run this demo.
+ * Configure the hardware as necessary to run.
  */
-static void prvSetupHardware( void );
-
-/*
- * See the comments at the top of this file and above the
- * mainSELECTED_APPLICATION definition.
- */
-#if ( mainSELECTED_APPLICATION == 0 )
-	extern void main_blinky( void );
-#elif ( mainSELECTED_APPLICATION == 1 )
-	extern void main_full( void );
-#elif ( mainSELECTED_APPLICATION == 2 )
-	extern void main_lwIP( void );
-#else
-	#error Invalid mainSELECTED_APPLICATION setting.  See the comments at the top of this file and above the mainSELECTED_APPLICATION definition.
-#endif
+static void prvSetupHardware(void);
 
 /*
  * The Xilinx projects use a BSP that do not allow the start up code to be
@@ -166,14 +139,14 @@ static void prvSetupHardware( void );
  * FreeRTOS_asm_vectors.S, which is part of this project.  Switch to use the
  * FreeRTOS vector table.
  */
-extern void vPortInstallFreeRTOSVectorTable( void );
+extern void vPortInstallFreeRTOSVectorTable(void);
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
 within this file. */
-void vApplicationMallocFailedHook( void );
-void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
-void vApplicationTickHook( void );
+void vApplicationMallocFailedHook(void);
+void vApplicationIdleHook(void);
+void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
+void vApplicationTickHook(void);
 
 /* The private watchdog is used as the timer that generates run time
 stats.  This frequency means it will overflow quite quickly. */
@@ -185,43 +158,28 @@ XScuWdt xWatchDogInstance;
 other modules. */
 XScuGic xInterruptController;
 
-/*-----------------------------------------------------------*/
-
-int main1( void )
+int main(void)
 {
 	/* See http://www.freertos.org/RTOS-Xilinx-Zynq.html for instructions. */
 
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
+	/* Initialize all modules */
+	display_init();
 
-	//int* bram = XPAR_AXI_BRAM_CTRL_0_S_AXI_BASEADDR;
-	//int a = *bram;
-	//*bram = 0xFF;
-	//int b = *bram;
+	/* Add all tasks to scheduler */
+	display_add_tasks();
 
-	/* The mainSELECTED_APPLICATION setting is described at the top	of this
-	file. */
-	#if( mainSELECTED_APPLICATION == 0 )
-	{
-		main_blinky();
-	}
-	#elif( mainSELECTED_APPLICATION == 1 )
-	{
-		main_full();
-	}
-	#else
-	{
-		main_lwIP();
-	}
-	#endif
+
+	vTaskStartScheduler();
 
 	/* Don't expect to reach here. */
+	while (1);
 	return 0;
 }
-/*-----------------------------------------------------------*/
 
-static void prvSetupHardware( void )
+static void prvSetupHardware(void)
 {
 BaseType_t xStatus;
 XScuGic_Config *pxGICConfig;
@@ -245,9 +203,6 @@ XScuGic_Config *pxGICConfig;
 	configASSERT( xStatus == XST_SUCCESS );
 	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 
-	/* Initialise the LED port. */
-	vParTestInitialise();
-
 	/* The Xilinx projects use a BSP that do not allow the start up code to be
 	altered easily.  Therefore the vector table used by FreeRTOS is defined in
 	FreeRTOS_asm_vectors.S, which is part of this project.  Switch to use the
@@ -256,7 +211,7 @@ XScuGic_Config *pxGICConfig;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationMallocFailedHook( void )
+void vApplicationMallocFailedHook(void)
 {
 	/* Called if a call to pvPortMalloc() fails because there is insufficient
 	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
@@ -268,7 +223,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
 	( void ) pcTaskName;
 	( void ) pxTask;
@@ -281,12 +236,12 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationIdleHook( void )
+void vApplicationIdleHook(void)
 {
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char * pcFile, unsigned long ulLine )
+void vAssertCalled(const char * pcFile, unsigned long ulLine)
 {
 volatile unsigned long ul = 0;
 
@@ -308,29 +263,10 @@ volatile unsigned long ul = 0;
 
 void vApplicationTickHook( void )
 {
-	#if( mainSELECTED_APPLICATION == 1 )
-	{
-		/* The full demo includes a software timer demo/test that requires
-		prodding periodically from the tick interrupt. */
-		vTimerPeriodicISRTests();
-
-		/* Call the periodic queue overwrite from ISR demo. */
-		vQueueOverwritePeriodicISRDemo();
-
-		/* Call the periodic event group from ISR demo. */
-		vPeriodicEventGroupsProcessing();
-
-		/* Use task notifications from an interrupt. */
-		xNotifyTaskFromISR();
-
-		/* Use mutexes from interrupts. */
-		vInterruptSemaphorePeriodicTest();
-	}
-	#endif
 }
 /*-----------------------------------------------------------*/
 
-void *memcpy( void *pvDest, const void *pvSource, size_t xBytes )
+void *memcpy(void *pvDest, const void *pvSource, size_t xBytes)
 {
 /* The compiler used during development seems to err unless these volatiles are
 included at -O3 optimisation.  */
@@ -351,7 +287,7 @@ size_t x;
 }
 /*-----------------------------------------------------------*/
 
-void *memset( void *pvDest, int iValue, size_t xBytes )
+void *memset(void *pvDest, int iValue, size_t xBytes)
 {
 /* The compiler used during development seems to err unless these volatiles are
 included at -O3 optimisation.  */
@@ -369,7 +305,7 @@ volatile size_t x;
 }
 /*-----------------------------------------------------------*/
 
-int memcmp( const void *pvMem1, const void *pvMem2, size_t xBytes )
+int memcmp(const void *pvMem1, const void *pvMem2, size_t xBytes)
 {
 const volatile unsigned char *pucMem1 = pvMem1, *pucMem2 = pvMem2;
 volatile size_t x;
@@ -388,7 +324,7 @@ volatile size_t x;
 }
 /*-----------------------------------------------------------*/
 
-void vInitialiseTimerForRunTimeStats( void )
+void vInitialiseTimerForRunTimeStats(void)
 {
 XScuWdt_Config *pxWatchDogInstance;
 uint32_t ulValue;
@@ -410,7 +346,7 @@ const uint32_t ulMaxDivisor = 0xff, ulDivisorShift = 0x08;
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
 implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
 used by the Idle task. */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)
 {
 /* If the buffers to be provided to the Idle task are declared inside this
 function then they must be declared static - otherwise they will be allocated on
@@ -435,7 +371,7 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
 application must provide an implementation of vApplicationGetTimerTaskMemory()
 to provide the memory that is used by the Timer service task. */
-void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize )
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize)
 {
 /* If the buffers to be provided to the Timer task are declared inside this
 function then they must be declared static - otherwise they will be allocated on
