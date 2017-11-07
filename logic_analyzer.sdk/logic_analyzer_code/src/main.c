@@ -125,8 +125,10 @@
 #include "xscutimer.h"
 #include "xscugic.h"
 #include "xil_exception.h"
+#include "xil_cache.h"
 
 #include "display.h"
+#include "scope.h"
 
 /*
  * Configure the hardware as necessary to run.
@@ -163,14 +165,22 @@ int main(void)
 	/* See http://www.freertos.org/RTOS-Xilinx-Zynq.html for instructions. */
 
 	/* Configure the hardware ready to run the demo. */
+	Xil_DCacheDisable();
+	Xil_ICacheDisable();
 	prvSetupHardware();
 
 	/* Initialize all modules */
 	display_init();
+	scope_init();
 
 	/* Add all tasks to scheduler */
 	display_add_tasks();
+	scope_add_tasks();
 
+	int* bram = XPAR_AXI_BRAM_CTRL_1_S_AXI_BASEADDR;
+	int a = *bram;
+	*bram = 0xFF;
+	int b = *bram;
 
 	vTaskStartScheduler();
 

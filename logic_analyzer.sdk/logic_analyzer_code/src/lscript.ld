@@ -27,6 +27,7 @@ MEMORY
    ps7_qspi_linear_0_S_AXI_BASEADDR : ORIGIN = 0xFC000000, LENGTH = 0x1000000
    ps7_ram_0_S_AXI_BASEADDR : ORIGIN = 0x0, LENGTH = 0x30000
    ps7_ram_1_S_AXI_BASEADDR : ORIGIN = 0xFFFF0000, LENGTH = 0xFE00
+   bram  : ORIGIN = 0x40000000, LENGTH = 0x2000
 }
 
 /* Specify the default entry point to the program */
