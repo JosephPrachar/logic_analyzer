@@ -595,7 +595,6 @@
           <spirit:configurableElementValue spirit:referenceId="PCW_FPGA_FCLK0_ENABLE">1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="PCW_PLL_BYPASSMODE_ENABLE">0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
-        <bd:hdl_attributes/>
       </spirit:componentInstance>
       <spirit:componentInstance>
         <spirit:instanceName>axi_gpio_0</spirit:instanceName>
@@ -740,16 +739,6 @@
           <spirit:configurableElementValue spirit:referenceId="C_INCLUDE_SG">0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
-      <spirit:componentInstance>
-        <spirit:instanceName>axi_bram_ctrl_1</spirit:instanceName>
-        <spirit:componentRef spirit:library="ip" spirit:name="axi_bram_ctrl" spirit:vendor="xilinx.com" spirit:version="4.0"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">design_1_axi_bram_ctrl_1_0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="SUPPORTS_NARROW_BURST">1</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="SINGLE_PORT_BRAM">1</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-        <bd:hdl_attributes/>
-      </spirit:componentInstance>
     </spirit:componentInstances>
     <spirit:interconnections>
       <spirit:interconnection>
@@ -821,16 +810,6 @@
         <spirit:name>ps7_0_axi_periph_M01_AXI</spirit:name>
         <spirit:activeInterface spirit:busRef="M01_AXI" spirit:componentRef="ps7_0_axi_periph"/>
         <spirit:activeInterface spirit:busRef="S_AXI_LITE" spirit:componentRef="axi_cdma_0"/>
-      </spirit:interconnection>
-      <spirit:interconnection>
-        <spirit:name>axi_bram_ctrl_1_BRAM_PORTA</spirit:name>
-        <spirit:activeInterface spirit:busRef="BRAM_PORTA" spirit:componentRef="axi_bram_ctrl_1"/>
-        <spirit:activeInterface spirit:busRef="BRAM_PORTB" spirit:componentRef="blk_mem_gen_0"/>
-      </spirit:interconnection>
-      <spirit:interconnection>
-        <spirit:name>ps7_0_axi_periph_M06_AXI</spirit:name>
-        <spirit:activeInterface spirit:busRef="M06_AXI" spirit:componentRef="ps7_0_axi_periph"/>
-        <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="axi_bram_ctrl_1"/>
       </spirit:interconnection>
       <spirit:interconnection>
         <spirit:name>axi_cdma_0_M_AXI</spirit:name>
@@ -908,7 +887,6 @@
         <spirit:internalPortReference spirit:componentRef="axi_intc_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_cdma_0" spirit:portRef="s_axi_lite_aresetn"/>
-        <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_1" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="S00_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="M00_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="M01_ARESETN"/>
@@ -943,7 +921,6 @@
         <spirit:internalPortReference spirit:componentRef="axi_cdma_0" spirit:portRef="m_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="axi_cdma_0" spirit:portRef="s_axi_lite_aclk"/>
         <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_0" spirit:portRef="s_axi_aclk"/>
-        <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_1" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="S00_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="M00_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="ACLK"/>
@@ -1667,7 +1644,7 @@
         <spirit:instanceName>auto_ds</spirit:instanceName>
         <spirit:componentRef spirit:library="ip" spirit:name="axi_dwidth_converter" spirit:vendor="xilinx.com" spirit:version="2.1"/>
         <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">design_1_auto_ds_7</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">design_1_auto_ds_6</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SI_DATA_WIDTH">64</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="MI_DATA_WIDTH">32</spirit:configurableElementValue>
         </spirit:configurableElementValues>
@@ -3461,36 +3438,11 @@
     <spirit:library>BlockDiagram/design_1_imp/ps7_0_axi_periph_imp</spirit:library>
     <spirit:name>m06_couplers_imp</spirit:name>
     <spirit:version>1.00.a</spirit:version>
-    <spirit:componentInstances>
-      <spirit:componentInstance>
-        <spirit:instanceName>auto_ds</spirit:instanceName>
-        <spirit:componentRef spirit:library="ip" spirit:name="axi_dwidth_converter" spirit:vendor="xilinx.com" spirit:version="2.1"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">design_1_auto_ds_6</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="SI_DATA_WIDTH">64</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="MI_DATA_WIDTH">32</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-    </spirit:componentInstances>
     <spirit:interconnections/>
-    <spirit:adHocConnections>
-      <spirit:adHocConnection>
-        <spirit:name>S_ACLK_1</spirit:name>
-        <spirit:externalPortReference spirit:portRef="S_ACLK"/>
-        <spirit:internalPortReference spirit:componentRef="auto_ds" spirit:portRef="s_axi_aclk"/>
-      </spirit:adHocConnection>
-      <spirit:adHocConnection>
-        <spirit:name>S_ARESETN_1</spirit:name>
-        <spirit:externalPortReference spirit:portRef="S_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="auto_ds" spirit:portRef="s_axi_aresetn"/>
-      </spirit:adHocConnection>
-    </spirit:adHocConnections>
+    <spirit:adHocConnections/>
     <spirit:hierConnections>
-      <spirit:hierConnection spirit:interfaceRef="M_AXI/auto_ds_to_m06_couplers">
-        <spirit:activeInterface spirit:busRef="M_AXI" spirit:componentRef="auto_ds"/>
-      </spirit:hierConnection>
-      <spirit:hierConnection spirit:interfaceRef="S_AXI/m06_couplers_to_auto_ds">
-        <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="auto_ds"/>
+      <spirit:hierConnection spirit:interfaceRef="M_AXI/m06_couplers_to_m06_couplers">
+        <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="./m06_couplers_to_m06_couplers"/>
       </spirit:hierConnection>
     </spirit:hierConnections>
   </spirit:design>
@@ -5256,12 +5208,6 @@
         <spirit:range>4G</spirit:range>
         <spirit:width>32</spirit:width>
         <spirit:segments>
-          <spirit:segment>
-            <spirit:name>SEG_axi_bram_ctrl_1_Mem0</spirit:name>
-            <spirit:displayName>/axi_bram_ctrl_1/S_AXI/Mem0</spirit:displayName>
-            <spirit:addressOffset>0x40000000</spirit:addressOffset>
-            <spirit:range>8K</spirit:range>
-          </spirit:segment>
           <spirit:segment>
             <spirit:name>SEG_axi_cdma_0_Reg</spirit:name>
             <spirit:displayName>/axi_cdma_0/S_AXI_LITE/Reg</spirit:displayName>

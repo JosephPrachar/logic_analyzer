@@ -1,7 +1,7 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-// Date        : Tue Nov  7 03:55:34 2017
+// Date        : Thu Nov  2 11:25:54 2017
 // Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
 // Command     : write_verilog -force -mode funcsim -rename_top design_1_auto_ds_6 -prefix
 //               design_1_auto_ds_6_ design_1_auto_ds_6_sim_netlist.v
