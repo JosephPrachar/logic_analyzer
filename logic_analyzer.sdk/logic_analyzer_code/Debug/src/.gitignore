@@ -4,3 +4,4 @@
 /dynclk/
 /intc/
 /timer_ps/
+/subdir.mk

@@ -2,9 +2,10 @@
 <section name="Workbench">
 	<section name="ExternalProjectImportWizard">
 		<item value="true" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
-		<item value="true" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
 		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\Users\cole\Documents\GitHub\logic_analyzer\logic_analyzer.sdk"/>
 			<item value="/home/joseph/school/year4/FreeRTOSv9.0.0/FreeRTOS/Demo/CORTEX_A9_Zynq_ZC702/RTOSDemo"/>
 		</list>
 		<list key="WizardProjectsImportPage.STORE_ARCHIVES">

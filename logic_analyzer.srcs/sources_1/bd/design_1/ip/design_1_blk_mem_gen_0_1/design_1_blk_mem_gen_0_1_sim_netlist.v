@@ -1,18 +1,18 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-// Date        : Tue Nov  7 03:55:17 2017
-// Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
-// Command     : write_verilog -force -mode funcsim -rename_top design_1_blk_mem_gen_0_1 -prefix
-//               design_1_blk_mem_gen_0_1_ design_1_blk_mem_gen_0_0_sim_netlist.v
-// Design      : design_1_blk_mem_gen_0_0
+// Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+// Date        : Thu Nov  9 09:25:07 2017
+// Host        : LAPTOP-Q02EBGTT running 64-bit major release  (build 9200)
+// Command     : write_verilog -force -mode funcsim
+//               C:/Users/cole/Documents/GitHub/logic_analyzer/logic_analyzer.srcs/sources_1/bd/design_1/ip/design_1_blk_mem_gen_0_1/design_1_blk_mem_gen_0_1_sim_netlist.v
+// Design      : design_1_blk_mem_gen_0_1
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
 // Device      : xc7z010clg400-1
 // --------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CHECK_LICENSE_TYPE = "design_1_blk_mem_gen_0_0,blk_mem_gen_v8_3_6,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "blk_mem_gen_v8_3_6,Vivado 2017.2" *) 
+(* CHECK_LICENSE_TYPE = "design_1_blk_mem_gen_0_1,blk_mem_gen_v8_3_6,{}" *) (* downgradeipidentifiedwarnings = "yes" *) (* x_core_info = "blk_mem_gen_v8_3_6,Vivado 2017.2" *) 
 (* NotValidForBitStream *)
 module design_1_blk_mem_gen_0_1
    (clka,
@@ -218,6 +218,7 @@ module design_1_blk_mem_gen_0_1
         .web(web));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_generic_cstr" *) 
 module design_1_blk_mem_gen_0_1_blk_mem_gen_generic_cstr
    (douta,
     doutb,
@@ -295,6 +296,7 @@ module design_1_blk_mem_gen_0_1_blk_mem_gen_generic_cstr
         .web(web[3:2]));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_prim_width" *) 
 module design_1_blk_mem_gen_0_1_blk_mem_gen_prim_width
    (douta,
     doutb,
@@ -420,6 +422,7 @@ module design_1_blk_mem_gen_0_1_blk_mem_gen_prim_width__parameterized0
         .web(web));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_prim_wrapper" *) 
 module design_1_blk_mem_gen_0_1_blk_mem_gen_prim_wrapper
    (douta,
     doutb,
@@ -965,6 +968,7 @@ module design_1_blk_mem_gen_0_1_blk_mem_gen_prim_wrapper__parameterized0
         .WEBWE({1'b0,1'b0,1'b0,1'b0,web,web}));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_top" *) 
 module design_1_blk_mem_gen_0_1_blk_mem_gen_top
    (douta,
     doutb,
@@ -1051,7 +1055,7 @@ endmodule
 (* C_USE_URAM = "0" *) (* C_WEA_WIDTH = "4" *) (* C_WEB_WIDTH = "4" *) 
 (* C_WRITE_DEPTH_A = "2048" *) (* C_WRITE_DEPTH_B = "2048" *) (* C_WRITE_MODE_A = "WRITE_FIRST" *) 
 (* C_WRITE_MODE_B = "WRITE_FIRST" *) (* C_WRITE_WIDTH_A = "32" *) (* C_WRITE_WIDTH_B = "32" *) 
-(* C_XDEVICEFAMILY = "zynq" *) (* downgradeipidentifiedwarnings = "yes" *) 
+(* C_XDEVICEFAMILY = "zynq" *) (* ORIG_REF_NAME = "blk_mem_gen_v8_3_6" *) (* downgradeipidentifiedwarnings = "yes" *) 
 module design_1_blk_mem_gen_0_1_blk_mem_gen_v8_3_6
    (clka,
     rsta,
@@ -1335,6 +1339,7 @@ module design_1_blk_mem_gen_0_1_blk_mem_gen_v8_3_6
         .web(web));
 endmodule
 
+(* ORIG_REF_NAME = "blk_mem_gen_v8_3_6_synth" *) 
 module design_1_blk_mem_gen_0_1_blk_mem_gen_v8_3_6_synth
    (douta,
     doutb,

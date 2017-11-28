@@ -1,10 +1,10 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-// Date        : Tue Oct 24 20:37:21 2017
-// Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
-// Command     : write_verilog -force -mode funcsim
-//               /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.srcs/sources_1/bd/design_1/ip/design_1_axis_subset_converter_0_0/design_1_axis_subset_converter_0_0_sim_netlist.v
+// Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+// Date        : Thu Nov  9 09:05:17 2017
+// Host        : LAPTOP-Q02EBGTT running 64-bit major release  (build 9200)
+// Command     : write_verilog -force -mode funcsim -rename_top design_1_axis_subset_converter_0_0 -prefix
+//               design_1_axis_subset_converter_0_0_ design_1_axis_subset_converter_0_0_sim_netlist.v
 // Design      : design_1_axis_subset_converter_0_0
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -131,7 +131,7 @@ endmodule
 (* G_MASK_SS_TDEST = "64" *) (* G_MASK_SS_TID = "32" *) (* G_MASK_SS_TKEEP = "8" *) 
 (* G_MASK_SS_TLAST = "16" *) (* G_MASK_SS_TREADY = "1" *) (* G_MASK_SS_TSTRB = "4" *) 
 (* G_MASK_SS_TUSER = "128" *) (* G_TASK_SEVERITY_ERR = "2" *) (* G_TASK_SEVERITY_INFO = "0" *) 
-(* G_TASK_SEVERITY_WARNING = "1" *) (* ORIG_REF_NAME = "top_design_1_axis_subset_converter_0_0" *) 
+(* G_TASK_SEVERITY_WARNING = "1" *) 
 module design_1_axis_subset_converter_0_0_top_design_1_axis_subset_converter_0_0
    (aclk,
     aresetn,
