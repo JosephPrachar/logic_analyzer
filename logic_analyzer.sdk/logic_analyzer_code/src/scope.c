@@ -145,11 +145,11 @@ static void scope_task(void* param) {
 
 	Xil_DCacheFlushRange((UINTPTR)ram_buf, 1024);
 	Xil_DCacheFlushRange((UINTPTR)ram_buf2, 1024);
-	Status = scope_dma_transfer(&AxiCdmaInstance, ram_buf, bram_base, 32);
+	//Status = scope_dma_transfer(&AxiCdmaInstance, ram_buf, bram_base, 32);
 	Xil_DCacheFlushRange((UINTPTR)ram_buf, 1024);
 	Xil_DCacheFlushRange((UINTPTR)ram_buf2, 1024);
 	if (Status != XST_SUCCESS) {
-		while (1) ;
+		//while (1) ;
 	}
 
 	for (int i = 0; i < 2048; i++) {
@@ -158,7 +158,7 @@ static void scope_task(void* param) {
 
 	Xil_DCacheFlushRange((UINTPTR)ram_buf, 1024);
 	Xil_DCacheFlushRange((UINTPTR)ram_buf2, 1024);
-	Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, ram_buf, 32);
+	Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, ram_buf, 1024);
 	Xil_DCacheFlushRange((UINTPTR)ram_buf, 1024);
 	Xil_DCacheFlushRange((UINTPTR)ram_buf2, 1024);
 	if (Status != XST_SUCCESS) {

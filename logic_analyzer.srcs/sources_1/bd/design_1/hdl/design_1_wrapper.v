@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-//Date        : Thu Nov  9 08:07:53 2017
+//Date        : Mon Nov 27 19:05:48 2017
 //Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target design_1_wrapper.bd
 //Design      : design_1_wrapper
@@ -10,7 +10,14 @@
 `timescale 1 ps / 1 ps
 
 module design_1_wrapper
-   (DDR_addr,
+   (BRAM_PORTB_addr,
+    BRAM_PORTB_clk,
+    BRAM_PORTB_din,
+    BRAM_PORTB_dout,
+    BRAM_PORTB_en,
+    BRAM_PORTB_rst,
+    BRAM_PORTB_we,
+    DDR_addr,
     DDR_ba,
     DDR_cas_n,
     DDR_ck_n,
@@ -40,6 +47,13 @@ module design_1_wrapper
     hdmi_out_ddc_sda_io,
     pattern_tri_o,
     settings_tri_o);
+  input [31:0]BRAM_PORTB_addr;
+  input BRAM_PORTB_clk;
+  input [31:0]BRAM_PORTB_din;
+  output [31:0]BRAM_PORTB_dout;
+  input BRAM_PORTB_en;
+  input BRAM_PORTB_rst;
+  input [3:0]BRAM_PORTB_we;
   inout [14:0]DDR_addr;
   inout [2:0]DDR_ba;
   inout DDR_cas_n;
@@ -71,6 +85,13 @@ module design_1_wrapper
   output [15:0]pattern_tri_o;
   output [15:0]settings_tri_o;
 
+  wire [31:0]BRAM_PORTB_addr;
+  wire BRAM_PORTB_clk;
+  wire [31:0]BRAM_PORTB_din;
+  wire [31:0]BRAM_PORTB_dout;
+  wire BRAM_PORTB_en;
+  wire BRAM_PORTB_rst;
+  wire [3:0]BRAM_PORTB_we;
   wire [14:0]DDR_addr;
   wire [2:0]DDR_ba;
   wire DDR_cas_n;
@@ -109,7 +130,14 @@ module design_1_wrapper
   wire [15:0]settings_tri_o;
 
   design_1 design_1_i
-       (.DDR_addr(DDR_addr),
+       (.BRAM_PORTB_addr(BRAM_PORTB_addr),
+        .BRAM_PORTB_clk(BRAM_PORTB_clk),
+        .BRAM_PORTB_din(BRAM_PORTB_din),
+        .BRAM_PORTB_dout(BRAM_PORTB_dout),
+        .BRAM_PORTB_en(BRAM_PORTB_en),
+        .BRAM_PORTB_rst(BRAM_PORTB_rst),
+        .BRAM_PORTB_we(BRAM_PORTB_we),
+        .DDR_addr(DDR_addr),
         .DDR_ba(DDR_ba),
         .DDR_cas_n(DDR_cas_n),
         .DDR_ck_n(DDR_ck_n),
