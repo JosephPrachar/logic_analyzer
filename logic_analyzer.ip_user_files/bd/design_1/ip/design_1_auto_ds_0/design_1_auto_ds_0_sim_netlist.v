@@ -12,7 +12,7 @@
 // --------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo
+module design_1_auto_ds_6_axi_data_fifo_v2_1_12_axic_fifo
    (dout,
     empty,
     SR,
@@ -129,7 +129,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo
   wire wr_en;
   wire wrap_need_to_split_q;
 
-  design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen inst
+  design_1_auto_ds_6_axi_data_fifo_v2_1_12_fifo_gen inst
        (.CLK(CLK),
         .D(D),
         .E(E),
@@ -171,7 +171,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo
 endmodule
 
 (* ORIG_REF_NAME = "axi_data_fifo_v2_1_12_axic_fifo" *) 
-module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo__parameterized0
+module design_1_auto_ds_6_axi_data_fifo_v2_1_12_axic_fifo__parameterized0
    (\current_word_1_reg[1] ,
     full,
     \m_axi_awsize[2] ,
@@ -312,7 +312,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo__parameterized0
   wire [7:0]\wrap_rest_len_reg[7] ;
   wire [7:0]\wrap_unaligned_len_q_reg[7] ;
 
-  design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen__parameterized0 inst
+  design_1_auto_ds_6_axi_data_fifo_v2_1_12_fifo_gen__parameterized0 inst
        (.CLK(CLK),
         .CO(CO),
         .D(D),
@@ -362,7 +362,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "axi_data_fifo_v2_1_12_axic_fifo" *) 
-module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo__parameterized0_19
+module design_1_auto_ds_6_axi_data_fifo_v2_1_12_axic_fifo__parameterized0_19
    (dout,
     din,
     cmd_push,
@@ -593,7 +593,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo__parameterized0_19
   wire [7:0]\wrap_rest_len_reg[7] ;
   wire [7:0]\wrap_unaligned_len_q_reg[7] ;
 
-  design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen__parameterized0_20 inst
+  design_1_auto_ds_6_axi_data_fifo_v2_1_12_fifo_gen__parameterized0_20 inst
        (.CLK(CLK),
         .CO(CO),
         .D(D),
@@ -668,7 +668,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo__parameterized0_19
         .\wrap_unaligned_len_q_reg[7] (\wrap_unaligned_len_q_reg[7] ));
 endmodule
 
-module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen
+module design_1_auto_ds_6_axi_data_fifo_v2_1_12_fifo_gen
    (dout,
     empty,
     SR,
@@ -1253,7 +1253,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen
   (* C_WR_PNTR_WIDTH_WDCH = "10" *) 
   (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
   (* C_WR_RESPONSE_LATENCY = "1" *) 
-  design_1_auto_ds_0_fifo_generator_v13_1_4 fifo_gen_inst
+  design_1_auto_ds_6_fifo_generator_v13_1_4 fifo_gen_inst
        (.almost_empty(NLW_fifo_gen_inst_almost_empty_UNCONNECTED),
         .almost_full(NLW_fifo_gen_inst_almost_full_UNCONNECTED),
         .axi_ar_data_count(NLW_fifo_gen_inst_axi_ar_data_count_UNCONNECTED[4:0]),
@@ -1578,7 +1578,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen
 endmodule
 
 (* ORIG_REF_NAME = "axi_data_fifo_v2_1_12_fifo_gen" *) 
-module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen__parameterized0
+module design_1_auto_ds_6_axi_data_fifo_v2_1_12_fifo_gen__parameterized0
    (\current_word_1_reg[1] ,
     full,
     \m_axi_awsize[2] ,
@@ -2324,7 +2324,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen__parameterized0
   (* C_WR_PNTR_WIDTH_WDCH = "10" *) 
   (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
   (* C_WR_RESPONSE_LATENCY = "1" *) 
-  design_1_auto_ds_0_fifo_generator_v13_1_4__parameterized0__1 fifo_gen_inst
+  design_1_auto_ds_6_fifo_generator_v13_1_4__parameterized0__1 fifo_gen_inst
        (.almost_empty(NLW_fifo_gen_inst_almost_empty_UNCONNECTED),
         .almost_full(NLW_fifo_gen_inst_almost_full_UNCONNECTED),
         .axi_ar_data_count(NLW_fifo_gen_inst_axi_ar_data_count_UNCONNECTED[4:0]),
@@ -2745,7 +2745,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "axi_data_fifo_v2_1_12_fifo_gen" *) 
-module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen__parameterized0_20
+module design_1_auto_ds_6_axi_data_fifo_v2_1_12_fifo_gen__parameterized0_20
    (dout,
     din,
     wr_en,
@@ -3699,7 +3699,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen__parameterized0_20
   (* C_WR_PNTR_WIDTH_WDCH = "10" *) 
   (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
   (* C_WR_RESPONSE_LATENCY = "1" *) 
-  design_1_auto_ds_0_fifo_generator_v13_1_4__parameterized0 fifo_gen_inst
+  design_1_auto_ds_6_fifo_generator_v13_1_4__parameterized0 fifo_gen_inst
        (.almost_empty(NLW_fifo_gen_inst_almost_empty_UNCONNECTED),
         .almost_full(NLW_fifo_gen_inst_almost_full_UNCONNECTED),
         .axi_ar_data_count(NLW_fifo_gen_inst_axi_ar_data_count_UNCONNECTED[4:0]),
@@ -4218,7 +4218,7 @@ module design_1_auto_ds_0_axi_data_fifo_v2_1_12_fifo_gen__parameterized0_20
         .O(E));
 endmodule
 
-module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer
+module design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_a_downsizer
    (dout,
     empty,
     SR,
@@ -4863,7 +4863,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer
         .D(\USE_B_CHANNEL.cmd_b_queue_n_18 ),
         .Q(cmd_b_empty),
         .S(SR));
-  design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo \USE_B_CHANNEL.cmd_b_queue 
+  design_1_auto_ds_6_axi_data_fifo_v2_1_12_axic_fifo \USE_B_CHANNEL.cmd_b_queue 
        (.CLK(CLK),
         .D({\USE_B_CHANNEL.cmd_b_queue_n_12 ,\USE_B_CHANNEL.cmd_b_queue_n_13 ,\USE_B_CHANNEL.cmd_b_queue_n_14 ,\USE_B_CHANNEL.cmd_b_queue_n_15 ,\USE_B_CHANNEL.cmd_b_queue_n_16 }),
         .E(\USE_B_CHANNEL.cmd_b_queue_n_19 ),
@@ -5065,7 +5065,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer
         .D(\USE_B_CHANNEL.cmd_b_queue_n_23 ),
         .Q(cmd_push_block),
         .R(1'b0));
-  design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo__parameterized0 cmd_queue
+  design_1_auto_ds_6_axi_data_fifo_v2_1_12_axic_fifo__parameterized0 cmd_queue
        (.CLK(CLK),
         .CO(last_incr_split0),
         .D(D),
@@ -6730,7 +6730,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer
 endmodule
 
 (* ORIG_REF_NAME = "axi_dwidth_converter_v2_1_13_a_downsizer" *) 
-module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer__parameterized0
+module design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_a_downsizer__parameterized0
    (dout,
     \m_axi_arsize[2] ,
     E,
@@ -7575,7 +7575,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer__parameterize
         .D(cmd_queue_n_37),
         .Q(cmd_push_block),
         .R(1'b0));
-  design_1_auto_ds_0_axi_data_fifo_v2_1_12_axic_fifo__parameterized0_19 cmd_queue
+  design_1_auto_ds_6_axi_data_fifo_v2_1_12_axic_fifo__parameterized0_19 cmd_queue
        (.CLK(CLK),
         .CO(last_incr_split0),
         .D({cmd_queue_n_28,cmd_queue_n_29,cmd_queue_n_30,cmd_queue_n_31,cmd_queue_n_32}),
@@ -9269,7 +9269,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer__parameterize
         .R(SR));
 endmodule
 
-module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_axi_downsizer
+module design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_axi_downsizer
    (s_axi_rlast,
     s_axi_awready,
     s_axi_bid,
@@ -9528,7 +9528,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_axi_downsizer
   wire [7:0]wr_cmd_length;
   wire [2:0]wr_cmd_offset;
 
-  design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer__parameterized0 \USE_READ.read_addr_inst 
+  design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_a_downsizer__parameterized0 \USE_READ.read_addr_inst 
        (.CLK(CLK),
         .D(p_0_in),
         .E(s_axi_arready),
@@ -9577,7 +9577,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_axi_downsizer
         .s_axi_rlast(s_axi_rlast),
         .s_axi_rready(s_axi_rready),
         .s_axi_rvalid(s_axi_rvalid));
-  design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_r_downsizer \USE_READ.read_data_inst 
+  design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_r_downsizer \USE_READ.read_data_inst 
        (.CLK(CLK),
         .D(p_0_in),
         .E(pop_mi_data),
@@ -9598,7 +9598,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_axi_downsizer
         .m_axi_rresp(m_axi_rresp),
         .s_axi_rdata(s_axi_rdata),
         .s_axi_rresp(s_axi_rresp));
-  design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_b_downsizer \USE_WRITE.USE_SPLIT.write_resp_inst 
+  design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_b_downsizer \USE_WRITE.USE_SPLIT.write_resp_inst 
        (.CLK(CLK),
         .SR(\USE_WRITE.write_addr_inst_n_10 ),
         .dout({wr_cmd_b_split,wr_cmd_b_repeat}),
@@ -9610,7 +9610,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_axi_downsizer
         .s_axi_bresp(s_axi_bresp),
         .s_axi_bvalid(s_axi_bvalid),
         .wr_cmd_b_ready(wr_cmd_b_ready));
-  design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_a_downsizer \USE_WRITE.write_addr_inst 
+  design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_a_downsizer \USE_WRITE.write_addr_inst 
        (.CLK(CLK),
         .D(p_0_in_0),
         .E(s_axi_awready),
@@ -9656,7 +9656,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_axi_downsizer
         .s_axi_wready(s_axi_wready),
         .s_axi_wvalid(s_axi_wvalid),
         .wr_cmd_b_ready(wr_cmd_b_ready));
-  design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_w_downsizer \USE_WRITE.write_data_inst 
+  design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_w_downsizer \USE_WRITE.write_data_inst 
        (.CLK(CLK),
         .D(p_0_in_0),
         .E(p_2_in),
@@ -9672,7 +9672,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_axi_downsizer
         .s_axi_wstrb(s_axi_wstrb));
 endmodule
 
-module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_b_downsizer
+module design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_b_downsizer
    (wr_cmd_b_ready,
     s_axi_bvalid,
     m_axi_bready,
@@ -10000,7 +10000,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_b_downsizer
         .O(s_axi_bvalid_INST_0_i_2_n_0));
 endmodule
 
-module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_r_downsizer
+module design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_r_downsizer
    (first_word,
     s_axi_rresp,
     s_axi_rdata,
@@ -11394,7 +11394,7 @@ endmodule
 (* C_S_AXI_DATA_WIDTH = "64" *) (* C_S_AXI_ID_WIDTH = "1" *) (* DowngradeIPIdentifiedWarnings = "yes" *) 
 (* P_AXI3 = "1" *) (* P_AXI4 = "0" *) (* P_AXILITE = "2" *) 
 (* P_CONVERSION = "2" *) (* P_MAX_SPLIT_BEATS = "256" *) 
-module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_top
+module design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_top
    (s_axi_aclk,
     s_axi_aresetn,
     s_axi_awid,
@@ -11630,7 +11630,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_top
   wire [7:0]s_axi_wstrb;
   wire s_axi_wvalid;
 
-  design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_axi_downsizer \gen_downsizer.gen_simple_downsizer.axi_downsizer_inst 
+  design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_axi_downsizer \gen_downsizer.gen_simple_downsizer.axi_downsizer_inst 
        (.CLK(s_axi_aclk),
         .din({m_axi_awsize,m_axi_awlen}),
         .m_axi_araddr(m_axi_araddr),
@@ -11706,7 +11706,7 @@ module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_top
         .s_axi_wvalid(s_axi_wvalid));
 endmodule
 
-module design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_w_downsizer
+module design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_w_downsizer
    (m_axi_wlast,
     m_axi_wdata,
     m_axi_wstrb,
@@ -12315,7 +12315,7 @@ endmodule
 
 (* CHECK_LICENSE_TYPE = "design_1_auto_ds_6,axi_dwidth_converter_v2_1_13_top,{}" *) (* DowngradeIPIdentifiedWarnings = "yes" *) (* X_CORE_INFO = "axi_dwidth_converter_v2_1_13_top,Vivado 2017.2" *) 
 (* NotValidForBitStream *)
-module design_1_auto_ds_0
+module design_1_auto_ds_6
    (s_axi_aclk,
     s_axi_aresetn,
     s_axi_awid,
@@ -12572,7 +12572,7 @@ module design_1_auto_ds_0
   (* P_AXILITE = "2" *) 
   (* P_CONVERSION = "2" *) 
   (* P_MAX_SPLIT_BEATS = "256" *) 
-  design_1_auto_ds_0_axi_dwidth_converter_v2_1_13_top inst
+  design_1_auto_ds_6_axi_dwidth_converter_v2_1_13_top inst
        (.m_axi_aclk(1'b0),
         .m_axi_araddr(m_axi_araddr),
         .m_axi_arburst(m_axi_arburst),
@@ -12653,7 +12653,7 @@ module design_1_auto_ds_0
         .s_axi_wvalid(s_axi_wvalid));
 endmodule
 
-module design_1_auto_ds_0_dmem
+module design_1_auto_ds_6_dmem
    (dout_i,
     clk,
     EN,
@@ -12789,7 +12789,7 @@ module design_1_auto_ds_0_dmem
 endmodule
 
 (* ORIG_REF_NAME = "dmem" *) 
-module design_1_auto_ds_0_dmem__parameterized0
+module design_1_auto_ds_6_dmem__parameterized0
    (dout_i,
     clk,
     ram_full_fb_i_reg,
@@ -13105,7 +13105,7 @@ module design_1_auto_ds_0_dmem__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "dmem" *) 
-module design_1_auto_ds_0_dmem__parameterized0_34
+module design_1_auto_ds_6_dmem__parameterized0_34
    (dout_i,
     clk,
     ram_full_fb_i_reg,
@@ -13427,7 +13427,7 @@ module design_1_auto_ds_0_dmem__parameterized0_34
         .R(1'b0));
 endmodule
 
-module design_1_auto_ds_0_fifo_generator_ramfifo
+module design_1_auto_ds_6_fifo_generator_ramfifo
    (empty,
     full,
     dout,
@@ -13467,7 +13467,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo
   wire wr_en;
   wire [1:1]wr_rst_i;
 
-  design_1_auto_ds_0_rd_logic_5 \gntv_or_sync_fifo.gl0.rd 
+  design_1_auto_ds_6_rd_logic_5 \gntv_or_sync_fifo.gl0.rd 
        (.E(ram_rd_en_i),
         .Q(rd_pntr_plus1),
         .clk(clk),
@@ -13482,7 +13482,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo
         .ram_full_fb_i_reg_0(\gntv_or_sync_fifo.gl0.wr_n_0 ),
         .rd_en(rd_en),
         .wr_en(wr_en));
-  design_1_auto_ds_0_wr_logic_6 \gntv_or_sync_fifo.gl0.wr 
+  design_1_auto_ds_6_wr_logic_6 \gntv_or_sync_fifo.gl0.wr 
        (.E(p_17_out),
         .Q(p_11_out),
         .clk(clk),
@@ -13495,7 +13495,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo
         .out(\gntv_or_sync_fifo.gl0.wr_n_0 ),
         .ram_empty_fb_i_reg(\gntv_or_sync_fifo.gl0.wr_n_3 ),
         .wr_en(wr_en));
-  design_1_auto_ds_0_memory \gntv_or_sync_fifo.mem 
+  design_1_auto_ds_6_memory \gntv_or_sync_fifo.mem 
        (.E(\gntv_or_sync_fifo.gl0.rd_n_6 ),
         .EN(p_17_out),
         .clk(clk),
@@ -13504,7 +13504,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo
         .dout(dout),
         .\gc0.count_d1_reg[4] (p_0_out_0),
         .\gpregsm1.curr_fwft_state_reg[1] (ram_rd_en_i));
-  design_1_auto_ds_0_reset_blk_ramfifo_7 rstblk
+  design_1_auto_ds_6_reset_blk_ramfifo_7 rstblk
        (.clk(clk),
         .\gc0.count_reg[1] ({rd_rst_i[2],rd_rst_i[0]}),
         .out({wr_rst_i,rst_full_ff_i}),
@@ -13512,7 +13512,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_ramfifo" *) 
-module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0
+module design_1_auto_ds_6_fifo_generator_ramfifo__parameterized0
    (empty,
     full,
     dout,
@@ -13552,7 +13552,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0
   wire wr_en;
   wire [1:1]wr_rst_i;
 
-  design_1_auto_ds_0_rd_logic \gntv_or_sync_fifo.gl0.rd 
+  design_1_auto_ds_6_rd_logic \gntv_or_sync_fifo.gl0.rd 
        (.E(ram_rd_en_i),
         .Q(rd_pntr_plus1),
         .clk(clk),
@@ -13567,7 +13567,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0
         .ram_full_fb_i_reg_0(\gntv_or_sync_fifo.gl0.wr_n_0 ),
         .rd_en(rd_en),
         .wr_en(wr_en));
-  design_1_auto_ds_0_wr_logic \gntv_or_sync_fifo.gl0.wr 
+  design_1_auto_ds_6_wr_logic \gntv_or_sync_fifo.gl0.wr 
        (.E(p_17_out),
         .Q(p_11_out),
         .clk(clk),
@@ -13580,7 +13580,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0
         .out(\gntv_or_sync_fifo.gl0.wr_n_0 ),
         .ram_empty_fb_i_reg(\gntv_or_sync_fifo.gl0.wr_n_3 ),
         .wr_en(wr_en));
-  design_1_auto_ds_0_memory__parameterized0 \gntv_or_sync_fifo.mem 
+  design_1_auto_ds_6_memory__parameterized0 \gntv_or_sync_fifo.mem 
        (.E(\gntv_or_sync_fifo.gl0.rd_n_6 ),
         .Q(p_11_out),
         .clk(clk),
@@ -13589,7 +13589,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0
         .\gc0.count_d1_reg[4] (p_0_out_0),
         .\gpregsm1.curr_fwft_state_reg[1] (ram_rd_en_i),
         .ram_full_fb_i_reg(p_17_out));
-  design_1_auto_ds_0_reset_blk_ramfifo rstblk
+  design_1_auto_ds_6_reset_blk_ramfifo rstblk
        (.clk(clk),
         .\gc0.count_reg[1] ({rd_rst_i[2],rd_rst_i[0]}),
         .out({wr_rst_i,rst_full_ff_i}),
@@ -13597,7 +13597,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_ramfifo" *) 
-module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0_23
+module design_1_auto_ds_6_fifo_generator_ramfifo__parameterized0_23
    (empty,
     full,
     dout,
@@ -13637,7 +13637,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0_23
   wire wr_en;
   wire [1:1]wr_rst_i;
 
-  design_1_auto_ds_0_rd_logic_24 \gntv_or_sync_fifo.gl0.rd 
+  design_1_auto_ds_6_rd_logic_24 \gntv_or_sync_fifo.gl0.rd 
        (.E(ram_rd_en_i),
         .Q(rd_pntr_plus1),
         .clk(clk),
@@ -13652,7 +13652,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0_23
         .ram_full_fb_i_reg_0(\gntv_or_sync_fifo.gl0.wr_n_0 ),
         .rd_en(rd_en),
         .wr_en(wr_en));
-  design_1_auto_ds_0_wr_logic_25 \gntv_or_sync_fifo.gl0.wr 
+  design_1_auto_ds_6_wr_logic_25 \gntv_or_sync_fifo.gl0.wr 
        (.E(p_17_out),
         .Q(p_11_out),
         .clk(clk),
@@ -13665,7 +13665,7 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0_23
         .out(\gntv_or_sync_fifo.gl0.wr_n_0 ),
         .ram_empty_fb_i_reg(\gntv_or_sync_fifo.gl0.wr_n_3 ),
         .wr_en(wr_en));
-  design_1_auto_ds_0_memory__parameterized0_26 \gntv_or_sync_fifo.mem 
+  design_1_auto_ds_6_memory__parameterized0_26 \gntv_or_sync_fifo.mem 
        (.E(\gntv_or_sync_fifo.gl0.rd_n_6 ),
         .Q(p_11_out),
         .clk(clk),
@@ -13674,14 +13674,14 @@ module design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0_23
         .\gc0.count_d1_reg[4] (p_0_out_0),
         .\gpregsm1.curr_fwft_state_reg[1] (ram_rd_en_i),
         .ram_full_fb_i_reg(p_17_out));
-  design_1_auto_ds_0_reset_blk_ramfifo_27 rstblk
+  design_1_auto_ds_6_reset_blk_ramfifo_27 rstblk
        (.clk(clk),
         .\gc0.count_reg[1] ({rd_rst_i[2],rd_rst_i[0]}),
         .out({wr_rst_i,rst_full_ff_i}),
         .rst(rst));
 endmodule
 
-module design_1_auto_ds_0_fifo_generator_top
+module design_1_auto_ds_6_fifo_generator_top
    (empty,
     full,
     dout,
@@ -13708,7 +13708,7 @@ module design_1_auto_ds_0_fifo_generator_top
   wire rst;
   wire wr_en;
 
-  design_1_auto_ds_0_fifo_generator_ramfifo \grf.rf 
+  design_1_auto_ds_6_fifo_generator_ramfifo \grf.rf 
        (.clk(clk),
         .din(din),
         .dout(dout),
@@ -13720,7 +13720,7 @@ module design_1_auto_ds_0_fifo_generator_top
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_top" *) 
-module design_1_auto_ds_0_fifo_generator_top__parameterized0
+module design_1_auto_ds_6_fifo_generator_top__parameterized0
    (empty,
     full,
     dout,
@@ -13747,7 +13747,7 @@ module design_1_auto_ds_0_fifo_generator_top__parameterized0
   wire rst;
   wire wr_en;
 
-  design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0 \grf.rf 
+  design_1_auto_ds_6_fifo_generator_ramfifo__parameterized0 \grf.rf 
        (.clk(clk),
         .din(din),
         .dout(dout),
@@ -13759,7 +13759,7 @@ module design_1_auto_ds_0_fifo_generator_top__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_top" *) 
-module design_1_auto_ds_0_fifo_generator_top__parameterized0_22
+module design_1_auto_ds_6_fifo_generator_top__parameterized0_22
    (empty,
     full,
     dout,
@@ -13786,7 +13786,7 @@ module design_1_auto_ds_0_fifo_generator_top__parameterized0_22
   wire rst;
   wire wr_en;
 
-  design_1_auto_ds_0_fifo_generator_ramfifo__parameterized0_23 \grf.rf 
+  design_1_auto_ds_6_fifo_generator_ramfifo__parameterized0_23 \grf.rf 
        (.clk(clk),
         .din(din),
         .dout(dout),
@@ -13865,7 +13865,7 @@ endmodule
 (* C_WR_PNTR_WIDTH_AXIS = "10" *) (* C_WR_PNTR_WIDTH_RACH = "4" *) (* C_WR_PNTR_WIDTH_RDCH = "10" *) 
 (* C_WR_PNTR_WIDTH_WACH = "4" *) (* C_WR_PNTR_WIDTH_WDCH = "10" *) (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
 (* C_WR_RESPONSE_LATENCY = "1" *) 
-module design_1_auto_ds_0_fifo_generator_v13_1_4
+module design_1_auto_ds_6_fifo_generator_v13_1_4
    (backup,
     backup_marker,
     clk,
@@ -14943,7 +14943,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4
   assign wr_rst_busy = \<const0> ;
   GND GND
        (.G(\<const0> ));
-  design_1_auto_ds_0_fifo_generator_v13_1_4_synth inst_fifo_gen
+  design_1_auto_ds_6_fifo_generator_v13_1_4_synth inst_fifo_gen
        (.clk(clk),
         .din({din[8],din[3:0]}),
         .dout(dout),
@@ -15022,7 +15022,7 @@ endmodule
 (* C_WR_PNTR_WIDTH_AXIS = "10" *) (* C_WR_PNTR_WIDTH_RACH = "4" *) (* C_WR_PNTR_WIDTH_RDCH = "10" *) 
 (* C_WR_PNTR_WIDTH_WACH = "4" *) (* C_WR_PNTR_WIDTH_WDCH = "10" *) (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
 (* C_WR_RESPONSE_LATENCY = "1" *) (* ORIG_REF_NAME = "fifo_generator_v13_1_4" *) 
-module design_1_auto_ds_0_fifo_generator_v13_1_4__parameterized0
+module design_1_auto_ds_6_fifo_generator_v13_1_4__parameterized0
    (backup,
     backup_marker,
     clk,
@@ -16100,7 +16100,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4__parameterized0
   assign wr_rst_busy = \<const0> ;
   GND GND
        (.G(\<const0> ));
-  design_1_auto_ds_0_fifo_generator_v13_1_4_synth__parameterized0_21 inst_fifo_gen
+  design_1_auto_ds_6_fifo_generator_v13_1_4_synth__parameterized0_21 inst_fifo_gen
        (.clk(clk),
         .din(din),
         .dout(dout),
@@ -16179,7 +16179,7 @@ endmodule
 (* C_WR_PNTR_WIDTH_AXIS = "10" *) (* C_WR_PNTR_WIDTH_RACH = "4" *) (* C_WR_PNTR_WIDTH_RDCH = "10" *) 
 (* C_WR_PNTR_WIDTH_WACH = "4" *) (* C_WR_PNTR_WIDTH_WDCH = "10" *) (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
 (* C_WR_RESPONSE_LATENCY = "1" *) (* ORIG_REF_NAME = "fifo_generator_v13_1_4" *) 
-module design_1_auto_ds_0_fifo_generator_v13_1_4__parameterized0__1
+module design_1_auto_ds_6_fifo_generator_v13_1_4__parameterized0__1
    (backup,
     backup_marker,
     clk,
@@ -17260,7 +17260,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4__parameterized0__1
   assign wr_rst_busy = \<const0> ;
   GND GND
        (.G(\<const0> ));
-  design_1_auto_ds_0_fifo_generator_v13_1_4_synth__parameterized0 inst_fifo_gen
+  design_1_auto_ds_6_fifo_generator_v13_1_4_synth__parameterized0 inst_fifo_gen
        (.clk(clk),
         .din(din),
         .dout({\^dout [25],\^dout [23:0]}),
@@ -17271,7 +17271,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4__parameterized0__1
         .wr_en(wr_en));
 endmodule
 
-module design_1_auto_ds_0_fifo_generator_v13_1_4_synth
+module design_1_auto_ds_6_fifo_generator_v13_1_4_synth
    (empty,
     full,
     dout,
@@ -17298,7 +17298,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4_synth
   wire rst;
   wire wr_en;
 
-  design_1_auto_ds_0_fifo_generator_top \gconvfifo.rf 
+  design_1_auto_ds_6_fifo_generator_top \gconvfifo.rf 
        (.clk(clk),
         .din(din),
         .dout(dout),
@@ -17310,7 +17310,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4_synth
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_v13_1_4_synth" *) 
-module design_1_auto_ds_0_fifo_generator_v13_1_4_synth__parameterized0
+module design_1_auto_ds_6_fifo_generator_v13_1_4_synth__parameterized0
    (empty,
     full,
     dout,
@@ -17337,7 +17337,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4_synth__parameterized0
   wire rst;
   wire wr_en;
 
-  design_1_auto_ds_0_fifo_generator_top__parameterized0 \gconvfifo.rf 
+  design_1_auto_ds_6_fifo_generator_top__parameterized0 \gconvfifo.rf 
        (.clk(clk),
         .din(din),
         .dout(dout),
@@ -17349,7 +17349,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4_synth__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_v13_1_4_synth" *) 
-module design_1_auto_ds_0_fifo_generator_v13_1_4_synth__parameterized0_21
+module design_1_auto_ds_6_fifo_generator_v13_1_4_synth__parameterized0_21
    (empty,
     full,
     dout,
@@ -17376,7 +17376,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4_synth__parameterized0_21
   wire rst;
   wire wr_en;
 
-  design_1_auto_ds_0_fifo_generator_top__parameterized0_22 \gconvfifo.rf 
+  design_1_auto_ds_6_fifo_generator_top__parameterized0_22 \gconvfifo.rf 
        (.clk(clk),
         .din(din),
         .dout(dout),
@@ -17387,7 +17387,7 @@ module design_1_auto_ds_0_fifo_generator_v13_1_4_synth__parameterized0_21
         .wr_en(wr_en));
 endmodule
 
-module design_1_auto_ds_0_memory
+module design_1_auto_ds_6_memory
    (dout,
     E,
     clk,
@@ -17415,7 +17415,7 @@ module design_1_auto_ds_0_memory
   wire [4:0]\gc0.count_d1_reg[4] ;
   wire [0:0]\gpregsm1.curr_fwft_state_reg[1] ;
 
-  design_1_auto_ds_0_dmem \gdm.dm_gen.dm 
+  design_1_auto_ds_6_dmem \gdm.dm_gen.dm 
        (.EN(EN),
         .clk(clk),
         .count_d10_in(count_d10_in),
@@ -17498,7 +17498,7 @@ module design_1_auto_ds_0_memory
 endmodule
 
 (* ORIG_REF_NAME = "memory" *) 
-module design_1_auto_ds_0_memory__parameterized0
+module design_1_auto_ds_6_memory__parameterized0
    (dout,
     E,
     clk,
@@ -17526,7 +17526,7 @@ module design_1_auto_ds_0_memory__parameterized0
   wire [0:0]\gpregsm1.curr_fwft_state_reg[1] ;
   wire [0:0]ram_full_fb_i_reg;
 
-  design_1_auto_ds_0_dmem__parameterized0 \gdm.dm_gen.dm 
+  design_1_auto_ds_6_dmem__parameterized0 \gdm.dm_gen.dm 
        (.Q(Q),
         .clk(clk),
         .din(din),
@@ -17737,7 +17737,7 @@ module design_1_auto_ds_0_memory__parameterized0
 endmodule
 
 (* ORIG_REF_NAME = "memory" *) 
-module design_1_auto_ds_0_memory__parameterized0_26
+module design_1_auto_ds_6_memory__parameterized0_26
    (dout,
     E,
     clk,
@@ -17765,7 +17765,7 @@ module design_1_auto_ds_0_memory__parameterized0_26
   wire [0:0]\gpregsm1.curr_fwft_state_reg[1] ;
   wire [0:0]ram_full_fb_i_reg;
 
-  design_1_auto_ds_0_dmem__parameterized0_34 \gdm.dm_gen.dm 
+  design_1_auto_ds_6_dmem__parameterized0_34 \gdm.dm_gen.dm 
        (.Q(Q),
         .clk(clk),
         .din(din),
@@ -17983,7 +17983,7 @@ module design_1_auto_ds_0_memory__parameterized0_26
         .R(1'b0));
 endmodule
 
-module design_1_auto_ds_0_rd_bin_cntr
+module design_1_auto_ds_6_rd_bin_cntr
    (Q,
     ram_empty_fb_i_reg,
     \gpr1.dout_i_reg[1] ,
@@ -18150,7 +18150,7 @@ module design_1_auto_ds_0_rd_bin_cntr
 endmodule
 
 (* ORIG_REF_NAME = "rd_bin_cntr" *) 
-module design_1_auto_ds_0_rd_bin_cntr_18
+module design_1_auto_ds_6_rd_bin_cntr_18
    (Q,
     ram_empty_fb_i_reg,
     \gpr1.dout_i_reg[1] ,
@@ -18317,7 +18317,7 @@ module design_1_auto_ds_0_rd_bin_cntr_18
 endmodule
 
 (* ORIG_REF_NAME = "rd_bin_cntr" *) 
-module design_1_auto_ds_0_rd_bin_cntr_39
+module design_1_auto_ds_6_rd_bin_cntr_39
    (Q,
     ram_empty_fb_i_reg,
     \gpr1.dout_i_reg[1] ,
@@ -18483,7 +18483,7 @@ module design_1_auto_ds_0_rd_bin_cntr_39
         .O(ram_empty_fb_i_i_6_n_0));
 endmodule
 
-module design_1_auto_ds_0_rd_fwft
+module design_1_auto_ds_6_rd_fwft
    (empty,
     ram_empty_fb_i_reg,
     E,
@@ -18725,7 +18725,7 @@ module design_1_auto_ds_0_rd_fwft
 endmodule
 
 (* ORIG_REF_NAME = "rd_fwft" *) 
-module design_1_auto_ds_0_rd_fwft_16
+module design_1_auto_ds_6_rd_fwft_16
    (empty,
     ram_empty_fb_i_reg,
     E,
@@ -18967,7 +18967,7 @@ module design_1_auto_ds_0_rd_fwft_16
 endmodule
 
 (* ORIG_REF_NAME = "rd_fwft" *) 
-module design_1_auto_ds_0_rd_fwft_37
+module design_1_auto_ds_6_rd_fwft_37
    (empty,
     ram_empty_fb_i_reg,
     E,
@@ -19208,7 +19208,7 @@ module design_1_auto_ds_0_rd_fwft_37
         .O(ram_full_fb_i_reg));
 endmodule
 
-module design_1_auto_ds_0_rd_logic
+module design_1_auto_ds_6_rd_logic
    (empty,
     Q,
     ram_empty_fb_i_reg,
@@ -19256,7 +19256,7 @@ module design_1_auto_ds_0_rd_logic
   wire [4:3]rd_pntr_plus1;
   wire wr_en;
 
-  design_1_auto_ds_0_rd_fwft \gr1.gr1_int.rfwft 
+  design_1_auto_ds_6_rd_fwft \gr1.gr1_int.rfwft 
        (.E(E),
         .Q(rd_pntr_plus1),
         .clk(clk),
@@ -19272,12 +19272,12 @@ module design_1_auto_ds_0_rd_logic
         .ram_full_fb_i_reg_0(ram_full_fb_i_reg_0),
         .rd_en(rd_en),
         .wr_en(wr_en));
-  design_1_auto_ds_0_rd_status_flags_ss \grss.rsts 
+  design_1_auto_ds_6_rd_status_flags_ss \grss.rsts 
        (.clk(clk),
         .\ngwrdrst.grst.g7serrst.rd_rst_reg_reg[2] (out[1]),
         .out(p_2_out),
         .ram_full_fb_i_reg(\gr1.gr1_int.rfwft_n_1 ));
-  design_1_auto_ds_0_rd_bin_cntr rpntr
+  design_1_auto_ds_6_rd_bin_cntr rpntr
        (.E(E),
         .Q({rd_pntr_plus1,Q}),
         .clk(clk),
@@ -19288,7 +19288,7 @@ module design_1_auto_ds_0_rd_logic
 endmodule
 
 (* ORIG_REF_NAME = "rd_logic" *) 
-module design_1_auto_ds_0_rd_logic_24
+module design_1_auto_ds_6_rd_logic_24
    (empty,
     Q,
     ram_empty_fb_i_reg,
@@ -19336,7 +19336,7 @@ module design_1_auto_ds_0_rd_logic_24
   wire [4:3]rd_pntr_plus1;
   wire wr_en;
 
-  design_1_auto_ds_0_rd_fwft_37 \gr1.gr1_int.rfwft 
+  design_1_auto_ds_6_rd_fwft_37 \gr1.gr1_int.rfwft 
        (.E(E),
         .Q(rd_pntr_plus1),
         .clk(clk),
@@ -19352,12 +19352,12 @@ module design_1_auto_ds_0_rd_logic_24
         .ram_full_fb_i_reg_0(ram_full_fb_i_reg_0),
         .rd_en(rd_en),
         .wr_en(wr_en));
-  design_1_auto_ds_0_rd_status_flags_ss_38 \grss.rsts 
+  design_1_auto_ds_6_rd_status_flags_ss_38 \grss.rsts 
        (.clk(clk),
         .\ngwrdrst.grst.g7serrst.rd_rst_reg_reg[2] (out[1]),
         .out(p_2_out),
         .ram_full_fb_i_reg(\gr1.gr1_int.rfwft_n_1 ));
-  design_1_auto_ds_0_rd_bin_cntr_39 rpntr
+  design_1_auto_ds_6_rd_bin_cntr_39 rpntr
        (.E(E),
         .Q({rd_pntr_plus1,Q}),
         .clk(clk),
@@ -19368,7 +19368,7 @@ module design_1_auto_ds_0_rd_logic_24
 endmodule
 
 (* ORIG_REF_NAME = "rd_logic" *) 
-module design_1_auto_ds_0_rd_logic_5
+module design_1_auto_ds_6_rd_logic_5
    (empty,
     Q,
     ram_empty_fb_i_reg,
@@ -19416,7 +19416,7 @@ module design_1_auto_ds_0_rd_logic_5
   wire [4:3]rd_pntr_plus1;
   wire wr_en;
 
-  design_1_auto_ds_0_rd_fwft_16 \gr1.gr1_int.rfwft 
+  design_1_auto_ds_6_rd_fwft_16 \gr1.gr1_int.rfwft 
        (.E(E),
         .Q(rd_pntr_plus1),
         .clk(clk),
@@ -19432,12 +19432,12 @@ module design_1_auto_ds_0_rd_logic_5
         .ram_full_fb_i_reg_0(ram_full_fb_i_reg_0),
         .rd_en(rd_en),
         .wr_en(wr_en));
-  design_1_auto_ds_0_rd_status_flags_ss_17 \grss.rsts 
+  design_1_auto_ds_6_rd_status_flags_ss_17 \grss.rsts 
        (.clk(clk),
         .\ngwrdrst.grst.g7serrst.rd_rst_reg_reg[2] (out[1]),
         .out(p_2_out),
         .ram_full_fb_i_reg(\gr1.gr1_int.rfwft_n_1 ));
-  design_1_auto_ds_0_rd_bin_cntr_18 rpntr
+  design_1_auto_ds_6_rd_bin_cntr_18 rpntr
        (.E(E),
         .Q({rd_pntr_plus1,Q}),
         .clk(clk),
@@ -19447,7 +19447,7 @@ module design_1_auto_ds_0_rd_logic_5
         .ram_empty_fb_i_reg(ram_empty_fb_i_reg));
 endmodule
 
-module design_1_auto_ds_0_rd_status_flags_ss
+module design_1_auto_ds_6_rd_status_flags_ss
    (out,
     ram_full_fb_i_reg,
     clk,
@@ -19489,7 +19489,7 @@ module design_1_auto_ds_0_rd_status_flags_ss
 endmodule
 
 (* ORIG_REF_NAME = "rd_status_flags_ss" *) 
-module design_1_auto_ds_0_rd_status_flags_ss_17
+module design_1_auto_ds_6_rd_status_flags_ss_17
    (out,
     ram_full_fb_i_reg,
     clk,
@@ -19531,7 +19531,7 @@ module design_1_auto_ds_0_rd_status_flags_ss_17
 endmodule
 
 (* ORIG_REF_NAME = "rd_status_flags_ss" *) 
-module design_1_auto_ds_0_rd_status_flags_ss_38
+module design_1_auto_ds_6_rd_status_flags_ss_38
    (out,
     ram_full_fb_i_reg,
     clk,
@@ -19572,7 +19572,7 @@ module design_1_auto_ds_0_rd_status_flags_ss_38
         .Q(ram_empty_i));
 endmodule
 
-module design_1_auto_ds_0_reset_blk_ramfifo
+module design_1_auto_ds_6_reset_blk_ramfifo
    (out,
     \gc0.count_reg[1] ,
     clk,
@@ -19602,30 +19602,30 @@ module design_1_auto_ds_0_reset_blk_ramfifo
   assign \gc0.count_reg[1] [1] = rd_rst_reg[2];
   assign \gc0.count_reg[1] [0] = rd_rst_reg[0];
   assign out[1:0] = wr_rst_reg[1:0];
-  design_1_auto_ds_0_synchronizer_ff \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].rrst_inst 
        (.clk(clk),
         .in0(rd_rst_asreg),
         .out(p_6_out));
-  design_1_auto_ds_0_synchronizer_ff_0 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_0 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].wrst_inst 
        (.clk(clk),
         .in0(wr_rst_asreg),
         .out(p_7_out));
-  design_1_auto_ds_0_synchronizer_ff_1 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_1 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst 
        (.AS(\ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst_n_1 ),
         .\Q_reg_reg[0]_0 (p_8_out),
         .clk(clk),
         .in0(rd_rst_asreg),
         .out(p_6_out));
-  design_1_auto_ds_0_synchronizer_ff_2 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_2 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst 
        (.AS(\ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst_n_1 ),
         .\Q_reg_reg[0]_0 (p_9_out),
         .clk(clk),
         .in0(wr_rst_asreg),
         .out(p_7_out));
-  design_1_auto_ds_0_synchronizer_ff_3 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_3 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].rrst_inst 
        (.\Q_reg_reg[0]_0 (p_8_out),
         .clk(clk));
-  design_1_auto_ds_0_synchronizer_ff_4 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_4 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].wrst_inst 
        (.\Q_reg_reg[0]_0 (p_9_out),
         .clk(clk));
   FDPE #(
@@ -19757,7 +19757,7 @@ module design_1_auto_ds_0_reset_blk_ramfifo
 endmodule
 
 (* ORIG_REF_NAME = "reset_blk_ramfifo" *) 
-module design_1_auto_ds_0_reset_blk_ramfifo_27
+module design_1_auto_ds_6_reset_blk_ramfifo_27
    (out,
     \gc0.count_reg[1] ,
     clk,
@@ -19787,30 +19787,30 @@ module design_1_auto_ds_0_reset_blk_ramfifo_27
   assign \gc0.count_reg[1] [1] = rd_rst_reg[2];
   assign \gc0.count_reg[1] [0] = rd_rst_reg[0];
   assign out[1:0] = wr_rst_reg[1:0];
-  design_1_auto_ds_0_synchronizer_ff_28 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_28 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].rrst_inst 
        (.clk(clk),
         .in0(rd_rst_asreg),
         .out(p_6_out));
-  design_1_auto_ds_0_synchronizer_ff_29 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_29 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].wrst_inst 
        (.clk(clk),
         .in0(wr_rst_asreg),
         .out(p_7_out));
-  design_1_auto_ds_0_synchronizer_ff_30 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_30 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst 
        (.AS(\ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst_n_1 ),
         .\Q_reg_reg[0]_0 (p_8_out),
         .clk(clk),
         .in0(rd_rst_asreg),
         .out(p_6_out));
-  design_1_auto_ds_0_synchronizer_ff_31 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_31 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst 
        (.AS(\ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst_n_1 ),
         .\Q_reg_reg[0]_0 (p_9_out),
         .clk(clk),
         .in0(wr_rst_asreg),
         .out(p_7_out));
-  design_1_auto_ds_0_synchronizer_ff_32 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_32 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].rrst_inst 
        (.\Q_reg_reg[0]_0 (p_8_out),
         .clk(clk));
-  design_1_auto_ds_0_synchronizer_ff_33 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_33 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].wrst_inst 
        (.\Q_reg_reg[0]_0 (p_9_out),
         .clk(clk));
   FDPE #(
@@ -19942,7 +19942,7 @@ module design_1_auto_ds_0_reset_blk_ramfifo_27
 endmodule
 
 (* ORIG_REF_NAME = "reset_blk_ramfifo" *) 
-module design_1_auto_ds_0_reset_blk_ramfifo_7
+module design_1_auto_ds_6_reset_blk_ramfifo_7
    (out,
     \gc0.count_reg[1] ,
     clk,
@@ -19972,30 +19972,30 @@ module design_1_auto_ds_0_reset_blk_ramfifo_7
   assign \gc0.count_reg[1] [1] = rd_rst_reg[2];
   assign \gc0.count_reg[1] [0] = rd_rst_reg[0];
   assign out[1:0] = wr_rst_reg[1:0];
-  design_1_auto_ds_0_synchronizer_ff_8 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_8 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].rrst_inst 
        (.clk(clk),
         .in0(rd_rst_asreg),
         .out(p_6_out));
-  design_1_auto_ds_0_synchronizer_ff_9 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_9 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[1].wrst_inst 
        (.clk(clk),
         .in0(wr_rst_asreg),
         .out(p_7_out));
-  design_1_auto_ds_0_synchronizer_ff_10 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_10 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst 
        (.AS(\ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].rrst_inst_n_1 ),
         .\Q_reg_reg[0]_0 (p_8_out),
         .clk(clk),
         .in0(rd_rst_asreg),
         .out(p_6_out));
-  design_1_auto_ds_0_synchronizer_ff_11 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_11 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst 
        (.AS(\ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[2].wrst_inst_n_1 ),
         .\Q_reg_reg[0]_0 (p_9_out),
         .clk(clk),
         .in0(wr_rst_asreg),
         .out(p_7_out));
-  design_1_auto_ds_0_synchronizer_ff_12 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].rrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_12 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].rrst_inst 
        (.\Q_reg_reg[0]_0 (p_8_out),
         .clk(clk));
-  design_1_auto_ds_0_synchronizer_ff_13 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].wrst_inst 
+  design_1_auto_ds_6_synchronizer_ff_13 \ngwrdrst.grst.g7serrst.gwrrd_rst_sync_stage[3].wrst_inst 
        (.\Q_reg_reg[0]_0 (p_9_out),
         .clk(clk));
   FDPE #(
@@ -20126,7 +20126,7 @@ module design_1_auto_ds_0_reset_blk_ramfifo_7
         .Q(wr_rst_reg[2]));
 endmodule
 
-module design_1_auto_ds_0_synchronizer_ff
+module design_1_auto_ds_6_synchronizer_ff
    (out,
     in0,
     clk);
@@ -20153,7 +20153,7 @@ module design_1_auto_ds_0_synchronizer_ff
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_0
+module design_1_auto_ds_6_synchronizer_ff_0
    (out,
     in0,
     clk);
@@ -20180,7 +20180,7 @@ module design_1_auto_ds_0_synchronizer_ff_0
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_1
+module design_1_auto_ds_6_synchronizer_ff_1
    (\Q_reg_reg[0]_0 ,
     AS,
     out,
@@ -20219,7 +20219,7 @@ module design_1_auto_ds_0_synchronizer_ff_1
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_10
+module design_1_auto_ds_6_synchronizer_ff_10
    (\Q_reg_reg[0]_0 ,
     AS,
     out,
@@ -20258,7 +20258,7 @@ module design_1_auto_ds_0_synchronizer_ff_10
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_11
+module design_1_auto_ds_6_synchronizer_ff_11
    (\Q_reg_reg[0]_0 ,
     AS,
     out,
@@ -20297,7 +20297,7 @@ module design_1_auto_ds_0_synchronizer_ff_11
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_12
+module design_1_auto_ds_6_synchronizer_ff_12
    (\Q_reg_reg[0]_0 ,
     clk);
   input \Q_reg_reg[0]_0 ;
@@ -20321,7 +20321,7 @@ module design_1_auto_ds_0_synchronizer_ff_12
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_13
+module design_1_auto_ds_6_synchronizer_ff_13
    (\Q_reg_reg[0]_0 ,
     clk);
   input \Q_reg_reg[0]_0 ;
@@ -20345,7 +20345,7 @@ module design_1_auto_ds_0_synchronizer_ff_13
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_2
+module design_1_auto_ds_6_synchronizer_ff_2
    (\Q_reg_reg[0]_0 ,
     AS,
     out,
@@ -20384,7 +20384,7 @@ module design_1_auto_ds_0_synchronizer_ff_2
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_28
+module design_1_auto_ds_6_synchronizer_ff_28
    (out,
     in0,
     clk);
@@ -20411,7 +20411,7 @@ module design_1_auto_ds_0_synchronizer_ff_28
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_29
+module design_1_auto_ds_6_synchronizer_ff_29
    (out,
     in0,
     clk);
@@ -20438,7 +20438,7 @@ module design_1_auto_ds_0_synchronizer_ff_29
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_3
+module design_1_auto_ds_6_synchronizer_ff_3
    (\Q_reg_reg[0]_0 ,
     clk);
   input \Q_reg_reg[0]_0 ;
@@ -20462,7 +20462,7 @@ module design_1_auto_ds_0_synchronizer_ff_3
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_30
+module design_1_auto_ds_6_synchronizer_ff_30
    (\Q_reg_reg[0]_0 ,
     AS,
     out,
@@ -20501,7 +20501,7 @@ module design_1_auto_ds_0_synchronizer_ff_30
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_31
+module design_1_auto_ds_6_synchronizer_ff_31
    (\Q_reg_reg[0]_0 ,
     AS,
     out,
@@ -20540,7 +20540,7 @@ module design_1_auto_ds_0_synchronizer_ff_31
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_32
+module design_1_auto_ds_6_synchronizer_ff_32
    (\Q_reg_reg[0]_0 ,
     clk);
   input \Q_reg_reg[0]_0 ;
@@ -20564,7 +20564,7 @@ module design_1_auto_ds_0_synchronizer_ff_32
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_33
+module design_1_auto_ds_6_synchronizer_ff_33
    (\Q_reg_reg[0]_0 ,
     clk);
   input \Q_reg_reg[0]_0 ;
@@ -20588,7 +20588,7 @@ module design_1_auto_ds_0_synchronizer_ff_33
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_4
+module design_1_auto_ds_6_synchronizer_ff_4
    (\Q_reg_reg[0]_0 ,
     clk);
   input \Q_reg_reg[0]_0 ;
@@ -20612,7 +20612,7 @@ module design_1_auto_ds_0_synchronizer_ff_4
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_8
+module design_1_auto_ds_6_synchronizer_ff_8
    (out,
     in0,
     clk);
@@ -20639,7 +20639,7 @@ module design_1_auto_ds_0_synchronizer_ff_8
 endmodule
 
 (* ORIG_REF_NAME = "synchronizer_ff" *) 
-module design_1_auto_ds_0_synchronizer_ff_9
+module design_1_auto_ds_6_synchronizer_ff_9
    (out,
     in0,
     clk);
@@ -20665,7 +20665,7 @@ module design_1_auto_ds_0_synchronizer_ff_9
         .R(1'b0));
 endmodule
 
-module design_1_auto_ds_0_wr_bin_cntr
+module design_1_auto_ds_6_wr_bin_cntr
    (ram_full_comb,
     ram_empty_fb_i_reg,
     Q,
@@ -20874,7 +20874,7 @@ module design_1_auto_ds_0_wr_bin_cntr
 endmodule
 
 (* ORIG_REF_NAME = "wr_bin_cntr" *) 
-module design_1_auto_ds_0_wr_bin_cntr_15
+module design_1_auto_ds_6_wr_bin_cntr_15
    (ram_full_comb,
     ram_empty_fb_i_reg,
     Q,
@@ -21083,7 +21083,7 @@ module design_1_auto_ds_0_wr_bin_cntr_15
 endmodule
 
 (* ORIG_REF_NAME = "wr_bin_cntr" *) 
-module design_1_auto_ds_0_wr_bin_cntr_36
+module design_1_auto_ds_6_wr_bin_cntr_36
    (ram_full_comb,
     ram_empty_fb_i_reg,
     Q,
@@ -21291,7 +21291,7 @@ module design_1_auto_ds_0_wr_bin_cntr_36
         .O(ram_full_fb_i_i_5_n_0));
 endmodule
 
-module design_1_auto_ds_0_wr_logic
+module design_1_auto_ds_6_wr_logic
    (out,
     full,
     E,
@@ -21331,7 +21331,7 @@ module design_1_auto_ds_0_wr_logic
   wire ram_full_comb;
   wire wr_en;
 
-  design_1_auto_ds_0_wr_status_flags_ss \gwss.wsts 
+  design_1_auto_ds_6_wr_status_flags_ss \gwss.wsts 
        (.E(E),
         .clk(clk),
         .full(full),
@@ -21339,7 +21339,7 @@ module design_1_auto_ds_0_wr_logic
         .out(out),
         .ram_full_comb(ram_full_comb),
         .wr_en(wr_en));
-  design_1_auto_ds_0_wr_bin_cntr wpntr
+  design_1_auto_ds_6_wr_bin_cntr wpntr
        (.E(E),
         .Q(Q),
         .clk(clk),
@@ -21355,7 +21355,7 @@ module design_1_auto_ds_0_wr_logic
 endmodule
 
 (* ORIG_REF_NAME = "wr_logic" *) 
-module design_1_auto_ds_0_wr_logic_25
+module design_1_auto_ds_6_wr_logic_25
    (out,
     full,
     E,
@@ -21395,7 +21395,7 @@ module design_1_auto_ds_0_wr_logic_25
   wire ram_full_comb;
   wire wr_en;
 
-  design_1_auto_ds_0_wr_status_flags_ss_35 \gwss.wsts 
+  design_1_auto_ds_6_wr_status_flags_ss_35 \gwss.wsts 
        (.E(E),
         .clk(clk),
         .full(full),
@@ -21403,7 +21403,7 @@ module design_1_auto_ds_0_wr_logic_25
         .out(out),
         .ram_full_comb(ram_full_comb),
         .wr_en(wr_en));
-  design_1_auto_ds_0_wr_bin_cntr_36 wpntr
+  design_1_auto_ds_6_wr_bin_cntr_36 wpntr
        (.E(E),
         .Q(Q),
         .clk(clk),
@@ -21419,7 +21419,7 @@ module design_1_auto_ds_0_wr_logic_25
 endmodule
 
 (* ORIG_REF_NAME = "wr_logic" *) 
-module design_1_auto_ds_0_wr_logic_6
+module design_1_auto_ds_6_wr_logic_6
    (out,
     full,
     E,
@@ -21459,7 +21459,7 @@ module design_1_auto_ds_0_wr_logic_6
   wire ram_full_comb;
   wire wr_en;
 
-  design_1_auto_ds_0_wr_status_flags_ss_14 \gwss.wsts 
+  design_1_auto_ds_6_wr_status_flags_ss_14 \gwss.wsts 
        (.E(E),
         .clk(clk),
         .full(full),
@@ -21467,7 +21467,7 @@ module design_1_auto_ds_0_wr_logic_6
         .out(out),
         .ram_full_comb(ram_full_comb),
         .wr_en(wr_en));
-  design_1_auto_ds_0_wr_bin_cntr_15 wpntr
+  design_1_auto_ds_6_wr_bin_cntr_15 wpntr
        (.E(E),
         .Q(Q),
         .clk(clk),
@@ -21482,7 +21482,7 @@ module design_1_auto_ds_0_wr_logic_6
         .wr_en(wr_en));
 endmodule
 
-module design_1_auto_ds_0_wr_status_flags_ss
+module design_1_auto_ds_6_wr_status_flags_ss
    (out,
     full,
     E,
@@ -21551,7 +21551,7 @@ module design_1_auto_ds_0_wr_status_flags_ss
 endmodule
 
 (* ORIG_REF_NAME = "wr_status_flags_ss" *) 
-module design_1_auto_ds_0_wr_status_flags_ss_14
+module design_1_auto_ds_6_wr_status_flags_ss_14
    (out,
     full,
     E,
@@ -21620,7 +21620,7 @@ module design_1_auto_ds_0_wr_status_flags_ss_14
 endmodule
 
 (* ORIG_REF_NAME = "wr_status_flags_ss" *) 
-module design_1_auto_ds_0_wr_status_flags_ss_35
+module design_1_auto_ds_6_wr_status_flags_ss_35
    (out,
     full,
     E,

@@ -1,1 +1,4 @@
 /Common/
+/makefile
+/objects.mk
+/sources.mk

@@ -1,12 +1,12 @@
 #-----------------------------------------------------------
 # Webtalk v2017.2 (64-bit)
-# SW Build 1909853 on Thu Jun 15 18:39:10 MDT 2017
+# SW Build 1909853 on Thu Jun 15 18:39:09 MDT 2017
 # 
-# Start of session at: Tue Nov  7 07:22:17 2017
-# Process ID: 16029
-# Current directory: /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/webtalk
-# Command line: wbtcv -mode batch -source sdk_webtalk.tcl
-# Log file: /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/webtalk/webtalk.log
-# Journal file: /home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/webtalk/webtalk.jou
+# Start of session at: Thu Nov 16 17:16:07 2017
+# Process ID: 4272
+# Current directory: C:/Users/cole/Documents/GitHub/logic_analyzer/logic_analyzer.sdk/webtalk
+# Command line: wbtcv.exe -mode batch -source sdk_webtalk.tcl
+# Log file: C:/Users/cole/Documents/GitHub/logic_analyzer/logic_analyzer.sdk/webtalk/webtalk.log
+# Journal file: C:/Users/cole/Documents/GitHub/logic_analyzer/logic_analyzer.sdk/webtalk\webtalk.jou
 #-----------------------------------------------------------
 source sdk_webtalk.tcl
