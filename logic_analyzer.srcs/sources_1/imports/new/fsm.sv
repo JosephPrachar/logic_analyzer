@@ -24,6 +24,7 @@ module fsm(
     input clock,
     input [15:0] clk_div,
     input [15:0] settings,
+    input [7:0] ports,
     output [31:0] addr,
     output [31:0] dout,
     output en,
@@ -48,13 +49,13 @@ module fsm(
      end
      
      always @(posedge capture_clk) begin
-        dout_reg = { 32'h55AA1144 };
+        dout_reg = { ports[7:0], dout_reg[31:8] };
         addr_reg = addr_reg + 1;
      end
      
      assign en = 1'd1;
      assign we = 4'hF;
-     assign dout = (addr < 10) ? 0 : dout_reg;
+     assign dout = dout_reg;
      assign addr = { 2'd0, addr_reg[31:2] };
      assign leds = addr_reg[5:2];
        

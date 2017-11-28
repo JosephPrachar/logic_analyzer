@@ -10,7 +10,8 @@
 `timescale 1 ps / 1 ps
 
 module design_1_wrapper
-   (DDR_addr,
+   (ports,
+    DDR_addr,
     DDR_ba,
     DDR_cas_n,
     DDR_ck_n,
@@ -42,7 +43,7 @@ module design_1_wrapper
 //    R_CLOCK,
  //   pattern_tri_o,
    // settings_tri_o);
-   
+  input [7:0] ports;
   inout [14:0]DDR_addr;
   inout [2:0]DDR_ba;
   inout DDR_cas_n;
@@ -72,6 +73,7 @@ module design_1_wrapper
   inout hdmi_out_ddc_sda_io;
   output [3:0] leds;
   
+  wire [7:0] ports;
   wire [31:0]BRAM_PORTB_addr;
   wire BRAM_PORTB_clk;
   wire [31:0]BRAM_PORTB_din;
@@ -109,6 +111,7 @@ module design_1_wrapper
      .clk_div(pattern_tri_o),
      .settings(settings_tri_o),
      .leds(leds),
+     .ports(ports),
      .addr(BRAM_PORTB_addr),
      .dout(BRAM_PORTB_din),
      .en(BRAM_PORTB_en),
