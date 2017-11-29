@@ -60,7 +60,7 @@ static void display_task(void* param);
 static void display_draw(u8 *buffer_frame, u8 *destFrame);
 static void display_clear_screen(u8 *destFrame, u8 *sourceFrame);
 static void display_screen_init(void);
-static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_screen, u8 scale);
+static void graphics_update_screen( u8 *next_screen, u8 scale);
 static void graphics_print_char(u16 x, u16 y, char a, int scale, u8 *frame);
 static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup);
 static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue);
@@ -161,7 +161,7 @@ static void display_draw(u8 *sourceFrame, u8 *destFrame) {
 	static int i = 0;
 
 
-	graphics_update_screen(new_data, sourceFrame, destFrame, 4);
+	graphics_update_screen(destFrame, 10);
 	Xil_DCacheFlushRange((unsigned int) destFrame, FRAME_SIZE);
 
 
@@ -182,35 +182,31 @@ static void display_screen_init(void) {
 	display_clear_screen(pFrames[0], pFrames[1]);
 }
 
-static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_screen, u8 scale) {
+static void graphics_update_screen(u8 *next_screen, u8 scale) {
 	u8 mask = 1;
 	u16 x1, x2, y1, y2;
-	if(1599 - current_screen.channel_loc[0] > DATA_SIZE + 20){
-		for(int k = 0; k < 8; k++){
-			if(!current_screen.channel_enable[k]){
-				continue;
-			}
-			graphics_fill_rect(current_screen.channel_loc[0], 181 + k * 90,
-									current_screen.channel_loc[0] + DATA_SIZE,
-									259 + k * 90, next_screen, 255, 255, 255);
-		}
 
-	}else{
-		int diff = 1599 - current_screen.channel_loc[0];
-		for(int k = 0; k < 8; k++){
-			if(!current_screen.channel_enable[k]){
-				continue;
-			}
-			graphics_fill_rect(current_screen.channel_loc[0], 181 + k * 90,
-									current_screen.channel_loc[0] + diff,
+
+	for(int k = 0; k < 8; k++){
+		if(!current_screen.channel_enable[k]){
+			continue;
+		}
+		if(1599 - current_screen.channel_loc[k] > DATA_SIZE / scale)
+			graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
+								current_screen.channel_loc[k] + DATA_SIZE /scale,
+								259 + k * 90, next_screen, 255, 255, 255);
+		else{
+			int diff = 1599 - current_screen.channel_loc[k];
+			graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
+									current_screen.channel_loc[k] + diff,
 									259 + k * 90, next_screen, 255, 255, 255);
-			graphics_fill_rect(155, 181 + k * 90, 155 + DATA_SIZE - diff,
+			graphics_fill_rect(155, 181 + k * 90, 155 + DATA_SIZE / scale - diff,
 									259 + k * 90, next_screen, 255, 255, 255);
 		}
 	}
 
 
-	for(int i = 0; i < DATA_SIZE; i++){
+	for(int i = 0; i < DATA_SIZE; i+= scale){
 		for(int j = 0; j < 8; j++){
 			if(!current_screen.channel_enable[j]){
 				continue;
@@ -229,18 +225,28 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 					y2 = current_screen.channel_height[j] + 77;
 					y1 = current_screen.channel_height[j];
 					current_screen.channel_height[j] = y2;
+					graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
 				}else{
 					y1 = current_screen.channel_height[j] - 77;
 					y2 = current_screen.channel_height[j];
 					current_screen.channel_height[j] = y1;
+					graphics_fill_rect(x1, y2, x2, y2 + 1, next_screen, 0, 0, 0);
 				}
-				graphics_fill_rect(x1, y1, x2, y1 - 1, next_screen, 0, 0, 0);
+
 				graphics_fill_rect(x2, y1, x2, y2, next_screen, 0, 0, 0);
-				current_screen.channel_loc[j] = x2;
+				current_screen.channel_loc[j] = x2 + 1;
 				current_screen.channel_low_or_high[j] = !current_screen.channel_low_or_high[j];
 				current_screen.channel_line_len[j] = 0;
-			}else if(i == DATA_SIZE -1){
-				x1 = current_screen.channel_loc[j];
+			}else{
+				current_screen.channel_line_len[j] = current_screen.channel_line_len[j] + 1;
+			}
+		}
+	}
+	for(int j = 0; j < 8; j++){
+		if(!current_screen.channel_enable[j]){
+			continue;
+		}
+			x1 = current_screen.channel_loc[j];
 				x2 = current_screen.channel_loc[j] + current_screen.channel_line_len[j];
 				y1 = current_screen.channel_height[j];
 				graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
@@ -252,17 +258,11 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 					}else{
 						y1 = current_screen.channel_height[j] - 77;
 					}
-
 					graphics_fill_rect(x2, y1, x2 + 20, y1 + 78, next_screen, 255, 255, 255);
-
 				}
-			}else{
-				current_screen.channel_line_len[j] = current_screen.channel_line_len[j] + 1;
-			}
-		}
 	}
 
-	graphics_print_string(current_screen.cmd_line_x, current_screen.cmd_line_y, my_data.cmd_line, 2, next_screen, 0);
+	graphics_print_string(current_screen.cmd_line_x, current_screen.cmd_line_y, new_data.cmd_line, 2, next_screen, 0);
 }
 
 
