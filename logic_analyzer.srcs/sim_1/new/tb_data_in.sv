@@ -25,8 +25,10 @@ module tb_data_in(
     );
     
     logic clk = 0;
-    logic [31:0] addr;
-    logic [31:0] din;
+    logic [31:0] sw_reg = 32'h80000000;
+    logic [31:0] hw_reg;
+    logic [12:0] addr;
+    logic [7:0] din;
     logic [3:0] we;
     logic [3:0] leds;
     logic en;
@@ -38,8 +40,8 @@ module tb_data_in(
     
     fsm fsm_i(
         .clock(clk),
-        .clk_div(0),
-        .settings(0),
+        .reg_in(sw_reg),
+        .reg_out(hw_reg),
         .addr(addr),
         .dout(din),
         .en(en),
@@ -47,7 +49,7 @@ module tb_data_in(
         .leds(leds));
     
     initial begin
-        #1000;
+        #100000;
         
         $finish(0);
     end

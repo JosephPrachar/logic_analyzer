@@ -10,6 +10,7 @@
 *runs/
 **/standalone_bsp_*
 *cache/
+*sim/
 !.gitignore
 !*.md
 ###########################################################################
@@ -53,8 +54,6 @@
 #########
 #Simulation logic analyzer
 #########
-!*.wcfg
-!*.coe
 #########
 #MIG
 #########
@@ -66,8 +65,6 @@
 #XPR  +  *.XML ? XPR (Files are merged into a single XPR file for 2014.1 version)
 #Do NOT ignore *.xpr files
 !*.xpr
-#Include *.xml files for 2013.4 or earlier version
-!*.xml
 #########
 #Constraint files
 #########
@@ -80,7 +77,7 @@
 #########
 #Journal - files
 #########
-!*.jou
+#
 #########
 #Reports
 #########

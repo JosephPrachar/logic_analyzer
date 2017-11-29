@@ -73,14 +73,12 @@ module design_1_wrapper
   inout hdmi_out_ddc_sda_io;
   output [3:0] leds;
   
-  wire [7:0] ports;
-  wire [31:0]BRAM_PORTB_addr;
+  wire [12:0]BRAM_PORTB_addr;
   wire BRAM_PORTB_clk;
-  wire [31:0]BRAM_PORTB_din;
-  wire [31:0]BRAM_PORTB_dout;
+  wire [7:0]BRAM_PORTB_din;
+  wire [7:0]BRAM_PORTB_dout;
   wire BRAM_PORTB_en;
-  wire BRAM_PORTB_rst;
-  wire [3:0]BRAM_PORTB_we;
+  wire [0:0]BRAM_PORTB_we;
   wire [14:0]DDR_addr;
   wire [2:0]DDR_ba;
   wire DDR_cas_n;
@@ -103,13 +101,12 @@ module design_1_wrapper
   wire FIXED_IO_ps_porb;
   wire FIXED_IO_ps_srstb;
   wire R_CLOCK;
-  wire [15:0]pattern_tri_o;
-  wire [15:0]settings_tri_o;
-
+  wire [31:0]data_hw_reg_tri_i;
+  wire [31:0]data_sw_reg_tri_o;
  fsm fsm_i
     (.clock(R_CLOCK),
-     .clk_div(pattern_tri_o),
-     .settings(settings_tri_o),
+     .reg_in(data_sw_reg_tri_o),
+     .reg_out(data_hw_reg_tri_i),
      .leds(leds),
      .ports(ports),
      .addr(BRAM_PORTB_addr),
@@ -131,9 +128,7 @@ module design_1_wrapper
        (.BRAM_PORTB_addr(BRAM_PORTB_addr),
         .BRAM_PORTB_clk(R_CLOCK),
         .BRAM_PORTB_din(BRAM_PORTB_din),
-        .BRAM_PORTB_dout(BRAM_PORTB_dout),
         .BRAM_PORTB_en(BRAM_PORTB_en),
-        .BRAM_PORTB_rst(0),
         .BRAM_PORTB_we(BRAM_PORTB_we),
         .DDR_addr(DDR_addr),
         .DDR_ba(DDR_ba),
@@ -156,9 +151,9 @@ module design_1_wrapper
         .FIXED_IO_ps_clk(FIXED_IO_ps_clk),
         .FIXED_IO_ps_porb(FIXED_IO_ps_porb),
         .FIXED_IO_ps_srstb(FIXED_IO_ps_srstb),
-        .Pattern_tri_o(pattern_tri_o),
         .R_CLOCK(R_CLOCK),
-        .Settings_tri_o(settings_tri_o),
+        .data_hw_reg_tri_i(data_hw_reg_tri_i),
+        .data_sw_reg_tri_o(data_sw_reg_tri_o),
         .HDMI_out_clk_n(hdmi_out_clk_n),
         .HDMI_out_clk_p(hdmi_out_clk_p),
         .HDMI_out_data_n(hdmi_out_data_n),

@@ -162,8 +162,8 @@ CONFIG.MASTER_TYPE {BRAM_CTRL} \
   set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
   set HDMI_out [ create_bd_intf_port -mode Master -vlnv digilentinc.com:interface:tmds_rtl:1.0 HDMI_out ]
   set HDMI_out_ddc [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 HDMI_out_ddc ]
-  set Pattern [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 Pattern ]
-  set Settings [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 Settings ]
+  set data_hw_reg [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 data_hw_reg ]
+  set data_sw_reg [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 data_sw_reg ]
 
   # Create ports
   set R_CLOCK [ create_bd_port -dir O -type clk R_CLOCK ]
@@ -189,11 +189,14 @@ CONFIG.C_M_AXI_MAX_BURST_LEN {2} \
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
   set_property -dict [ list \
+CONFIG.C_ALL_INPUTS {0} \
+CONFIG.C_ALL_INPUTS_2 {1} \
 CONFIG.C_ALL_OUTPUTS {1} \
-CONFIG.C_ALL_OUTPUTS_2 {1} \
+CONFIG.C_ALL_OUTPUTS_2 {0} \
+CONFIG.C_DOUT_DEFAULT {0x00FFFFFF} \
 CONFIG.C_DOUT_DEFAULT_2 {0xFFFFFFFF} \
-CONFIG.C_GPIO2_WIDTH {16} \
-CONFIG.C_GPIO_WIDTH {16} \
+CONFIG.C_GPIO2_WIDTH {32} \
+CONFIG.C_GPIO_WIDTH {32} \
 CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_0
 
@@ -229,12 +232,23 @@ CONFIG.TKEEP_REMAP {tkeep[2:0]} \
   # Create instance: blk_mem_gen_0, and set properties
   set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.3 blk_mem_gen_0 ]
   set_property -dict [ list \
+CONFIG.Byte_Size {9} \
+CONFIG.Enable_32bit_Address {false} \
 CONFIG.Enable_B {Use_ENB_Pin} \
+CONFIG.Fill_Remaining_Memory_Locations {true} \
 CONFIG.Memory_Type {True_Dual_Port_RAM} \
 CONFIG.Port_B_Clock {100} \
 CONFIG.Port_B_Enable_Rate {100} \
 CONFIG.Port_B_Write_Rate {50} \
-CONFIG.Use_RSTB_Pin {true} \
+CONFIG.Read_Width_B {8} \
+CONFIG.Register_PortA_Output_of_Memory_Primitives {true} \
+CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \
+CONFIG.Remaining_Memory_Locations {AA} \
+CONFIG.Use_Byte_Write_Enable {false} \
+CONFIG.Use_RSTA_Pin {false} \
+CONFIG.Use_RSTB_Pin {false} \
+CONFIG.Write_Width_B {8} \
+CONFIG.use_bram_block {Stand_Alone} \
  ] $blk_mem_gen_0
 
   # Create instance: processing_system7_0, and set properties
@@ -745,8 +759,8 @@ CONFIG.NUM_PORTS {3} \
   connect_bd_intf_net -intf_net BRAM_PORTB_1 [get_bd_intf_ports BRAM_PORTB] [get_bd_intf_pins blk_mem_gen_0/BRAM_PORTB]
   connect_bd_intf_net -intf_net axi_bram_ctrl_0_BRAM_PORTA [get_bd_intf_pins axi_bram_ctrl_0/BRAM_PORTA] [get_bd_intf_pins blk_mem_gen_0/BRAM_PORTA]
   connect_bd_intf_net -intf_net axi_cdma_0_M_AXI [get_bd_intf_pins axi_cdma_0/M_AXI] [get_bd_intf_pins axi_interconnect_0/S01_AXI]
-  connect_bd_intf_net -intf_net axi_gpio_0_GPIO [get_bd_intf_ports Settings] [get_bd_intf_pins axi_gpio_0/GPIO]
-  connect_bd_intf_net -intf_net axi_gpio_0_GPIO2 [get_bd_intf_ports Pattern] [get_bd_intf_pins axi_gpio_0/GPIO2]
+  connect_bd_intf_net -intf_net axi_gpio_0_GPIO [get_bd_intf_ports data_sw_reg] [get_bd_intf_pins axi_gpio_0/GPIO]
+  connect_bd_intf_net -intf_net axi_gpio_0_GPIO2 [get_bd_intf_ports data_hw_reg] [get_bd_intf_pins axi_gpio_0/GPIO2]
   connect_bd_intf_net -intf_net axi_interconnect_0_M00_AXI [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins processing_system7_0/S_AXI_HP0]
   connect_bd_intf_net -intf_net axi_interconnect_0_M01_AXI [get_bd_intf_pins axi_bram_ctrl_0/S_AXI] [get_bd_intf_pins axi_interconnect_0/M01_AXI]
   connect_bd_intf_net -intf_net axi_vdma_0_M_AXIS_MM2S [get_bd_intf_pins axi_vdma_0/M_AXIS_MM2S] [get_bd_intf_pins axis_subset_converter_0/S_AXIS]

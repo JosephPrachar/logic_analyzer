@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-//Date        : Mon Nov 27 19:05:47 2017
+//Date        : Tue Nov 28 18:39:27 2017
 //Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target design_1.bd
 //Design      : design_1
@@ -16,7 +16,6 @@ module design_1
     BRAM_PORTB_din,
     BRAM_PORTB_dout,
     BRAM_PORTB_en,
-    BRAM_PORTB_rst,
     BRAM_PORTB_we,
     DDR_addr,
     DDR_ba,
@@ -49,16 +48,15 @@ module design_1
     HDMI_out_ddc_sda_i,
     HDMI_out_ddc_sda_o,
     HDMI_out_ddc_sda_t,
-    Pattern_tri_o,
     R_CLOCK,
-    Settings_tri_o);
-  input [31:0]BRAM_PORTB_addr;
+    data_hw_reg_tri_i,
+    data_sw_reg_tri_o);
+  input [12:0]BRAM_PORTB_addr;
   input BRAM_PORTB_clk;
-  input [31:0]BRAM_PORTB_din;
-  output [31:0]BRAM_PORTB_dout;
+  input [7:0]BRAM_PORTB_din;
+  output [7:0]BRAM_PORTB_dout;
   input BRAM_PORTB_en;
-  input BRAM_PORTB_rst;
-  input [3:0]BRAM_PORTB_we;
+  input [0:0]BRAM_PORTB_we;
   inout [14:0]DDR_addr;
   inout [2:0]DDR_ba;
   inout DDR_cas_n;
@@ -90,23 +88,21 @@ module design_1
   input HDMI_out_ddc_sda_i;
   output HDMI_out_ddc_sda_o;
   output HDMI_out_ddc_sda_t;
-  output [15:0]Pattern_tri_o;
   output R_CLOCK;
-  output [15:0]Settings_tri_o;
+  input [31:0]data_hw_reg_tri_i;
+  output [31:0]data_sw_reg_tri_o;
 
-  wire [31:0]BRAM_PORTB_1_ADDR;
+  wire [12:0]BRAM_PORTB_1_ADDR;
   wire BRAM_PORTB_1_CLK;
-  wire [31:0]BRAM_PORTB_1_DIN;
-  wire [31:0]BRAM_PORTB_1_DOUT;
+  wire [7:0]BRAM_PORTB_1_DIN;
+  wire [7:0]BRAM_PORTB_1_DOUT;
   wire BRAM_PORTB_1_EN;
-  wire BRAM_PORTB_1_RST;
-  wire [3:0]BRAM_PORTB_1_WE;
+  wire [0:0]BRAM_PORTB_1_WE;
   wire [12:0]axi_bram_ctrl_0_BRAM_PORTA_ADDR;
   wire axi_bram_ctrl_0_BRAM_PORTA_CLK;
   wire [31:0]axi_bram_ctrl_0_BRAM_PORTA_DIN;
   wire [31:0]axi_bram_ctrl_0_BRAM_PORTA_DOUT;
   wire axi_bram_ctrl_0_BRAM_PORTA_EN;
-  wire axi_bram_ctrl_0_BRAM_PORTA_RST;
   wire [3:0]axi_bram_ctrl_0_BRAM_PORTA_WE;
   wire [31:0]axi_cdma_0_M_AXI_ARADDR;
   wire [1:0]axi_cdma_0_M_AXI_ARBURST;
@@ -141,8 +137,8 @@ module design_1
   wire axi_dynclk_0_LOCKED_O;
   wire axi_dynclk_0_PXL_CLK_5X_O;
   wire axi_dynclk_0_PXL_CLK_O;
-  wire [15:0]axi_gpio_0_GPIO2_TRI_O;
-  wire [15:0]axi_gpio_0_GPIO_TRI_O;
+  wire [31:0]axi_gpio_0_GPIO2_TRI_I;
+  wire [31:0]axi_gpio_0_GPIO_TRI_O;
   wire axi_intc_0_irq;
   wire [31:0]axi_interconnect_0_M00_AXI_ARADDR;
   wire [1:0]axi_interconnect_0_M00_AXI_ARBURST;
@@ -426,13 +422,12 @@ module design_1
   wire v_tc_0_vtiming_out_VSYNC;
   wire [2:0]xlconcat_0_dout;
 
-  assign BRAM_PORTB_1_ADDR = BRAM_PORTB_addr[31:0];
+  assign BRAM_PORTB_1_ADDR = BRAM_PORTB_addr[12:0];
   assign BRAM_PORTB_1_CLK = BRAM_PORTB_clk;
-  assign BRAM_PORTB_1_DIN = BRAM_PORTB_din[31:0];
+  assign BRAM_PORTB_1_DIN = BRAM_PORTB_din[7:0];
   assign BRAM_PORTB_1_EN = BRAM_PORTB_en;
-  assign BRAM_PORTB_1_RST = BRAM_PORTB_rst;
-  assign BRAM_PORTB_1_WE = BRAM_PORTB_we[3:0];
-  assign BRAM_PORTB_dout[31:0] = BRAM_PORTB_1_DOUT;
+  assign BRAM_PORTB_1_WE = BRAM_PORTB_we[0];
+  assign BRAM_PORTB_dout[7:0] = BRAM_PORTB_1_DOUT;
   assign HDMI_out_clk_n = rgb2dvi_0_TMDS_CLK_N;
   assign HDMI_out_clk_p = rgb2dvi_0_TMDS_CLK_P;
   assign HDMI_out_data_n[2:0] = rgb2dvi_0_TMDS_DATA_N;
@@ -441,9 +436,9 @@ module design_1
   assign HDMI_out_ddc_scl_t = processing_system7_0_IIC_0_SCL_T;
   assign HDMI_out_ddc_sda_o = processing_system7_0_IIC_0_SDA_O;
   assign HDMI_out_ddc_sda_t = processing_system7_0_IIC_0_SDA_T;
-  assign Pattern_tri_o[15:0] = axi_gpio_0_GPIO2_TRI_O;
   assign R_CLOCK = processing_system7_0_FCLK_CLK0;
-  assign Settings_tri_o[15:0] = axi_gpio_0_GPIO_TRI_O;
+  assign axi_gpio_0_GPIO2_TRI_I = data_hw_reg_tri_i[31:0];
+  assign data_sw_reg_tri_o[31:0] = axi_gpio_0_GPIO_TRI_O;
   assign processing_system7_0_IIC_0_SCL_I = HDMI_out_ddc_scl_i;
   assign processing_system7_0_IIC_0_SDA_I = HDMI_out_ddc_sda_i;
   design_1_axi_bram_ctrl_0_2 axi_bram_ctrl_0
@@ -451,7 +446,6 @@ module design_1
         .bram_clk_a(axi_bram_ctrl_0_BRAM_PORTA_CLK),
         .bram_en_a(axi_bram_ctrl_0_BRAM_PORTA_EN),
         .bram_rddata_a(axi_bram_ctrl_0_BRAM_PORTA_DOUT),
-        .bram_rst_a(axi_bram_ctrl_0_BRAM_PORTA_RST),
         .bram_we_a(axi_bram_ctrl_0_BRAM_PORTA_WE),
         .bram_wrdata_a(axi_bram_ctrl_0_BRAM_PORTA_DIN),
         .s_axi_aclk(processing_system7_0_FCLK_CLK0),
@@ -564,7 +558,7 @@ module design_1
         .s00_axi_wstrb(ps7_0_axi_periph_M04_AXI_WSTRB),
         .s00_axi_wvalid(ps7_0_axi_periph_M04_AXI_WVALID));
   design_1_axi_gpio_0_0 axi_gpio_0
-       (.gpio2_io_o(axi_gpio_0_GPIO2_TRI_O),
+       (.gpio2_io_i(axi_gpio_0_GPIO2_TRI_I),
         .gpio_io_o(axi_gpio_0_GPIO_TRI_O),
         .s_axi_aclk(processing_system7_0_FCLK_CLK0),
         .s_axi_araddr(ps7_0_axi_periph_M00_AXI_ARADDR[8:0]),
@@ -786,7 +780,7 @@ module design_1
         .s_axis_tuser(axi_vdma_0_M_AXIS_MM2S_TUSER),
         .s_axis_tvalid(axi_vdma_0_M_AXIS_MM2S_TVALID));
   design_1_blk_mem_gen_0_1 blk_mem_gen_0
-       (.addra({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,axi_bram_ctrl_0_BRAM_PORTA_ADDR}),
+       (.addra(axi_bram_ctrl_0_BRAM_PORTA_ADDR[10:0]),
         .addrb(BRAM_PORTB_1_ADDR),
         .clka(axi_bram_ctrl_0_BRAM_PORTA_CLK),
         .clkb(BRAM_PORTB_1_CLK),
@@ -796,9 +790,7 @@ module design_1
         .doutb(BRAM_PORTB_1_DOUT),
         .ena(axi_bram_ctrl_0_BRAM_PORTA_EN),
         .enb(BRAM_PORTB_1_EN),
-        .rsta(axi_bram_ctrl_0_BRAM_PORTA_RST),
-        .rstb(BRAM_PORTB_1_RST),
-        .wea(axi_bram_ctrl_0_BRAM_PORTA_WE),
+        .wea(axi_bram_ctrl_0_BRAM_PORTA_WE[0]),
         .web(BRAM_PORTB_1_WE));
   design_1_processing_system7_0_0 processing_system7_0
        (.DDR_Addr(DDR_addr[14:0]),

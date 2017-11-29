@@ -79,18 +79,31 @@
 #include "xil_cache.h"
 #include "xparameters.h"
 #include "scope.h"
+#include "xgpio.h"
 
 #if (!defined(DEBUG))
 extern void xil_printf(const char *format, ...);
 #endif
 
+static u8* bram_base = (u8*)0xC0000000;
+#define SCOPE_CLK_IN 100000000
+
+#define SCOPE_SW_REG 1
+#define SCOPE_HW_REG 2
+
+#define SCOPE_SW_REG_CLK_DIV_MSK   0x00FFFFFF
+#define SCOPE_SW_REG_ENABLE_MSK    0x80000000
+
+#define SCOPE_HW_REG_HALF_FULL_MSK 0x00000001
+
+
 #define DMA_RETRIES 5
 
 static XAxiCdma AxiCdmaInstance;	/* Instance of the XAxiCdma */
+static XGpio xGpio;
+static u32 sw_reg = 0x80989680; // enable with 10 samples/sec
 
 static u8 ram_buf[8192]  __attribute__ ((aligned (64)));
-static u8 ram_buf2[8192] __attribute__ ((aligned (64)));
-static u8* bram_base = 0xC0000000;
 
 /* Shared variables used to test the callbacks.
  */
@@ -100,6 +113,23 @@ static volatile int Error = 0;	/* Dma Error occurs */
 static int scope_dma_transfer(XAxiCdma *InstancePtr, u8* src, u8* dest, int num);
 static void scope_task(void* param) ;
 
+static void scope_set_freq(unsigned int freq) {
+	unsigned int div = SCOPE_CLK_IN / freq;
+	if (div > 0xFFFFFF) div = 0xFFFFFF;
+	sw_reg &= ~SCOPE_SW_REG_CLK_DIV_MSK;
+	sw_reg |= SCOPE_SW_REG_CLK_DIV_MSK & div;
+	XGpio_DiscreteWrite(&xGpio, SCOPE_SW_REG, sw_reg);
+}
+
+static void scope_enable(void) {
+	sw_reg |= SCOPE_SW_REG_ENABLE_MSK;
+	XGpio_DiscreteWrite(&xGpio, SCOPE_SW_REG, sw_reg);
+}
+
+static void scope_disable(void) {
+	sw_reg &= ~SCOPE_SW_REG_ENABLE_MSK;
+	XGpio_DiscreteWrite(&xGpio, SCOPE_SW_REG, sw_reg);
+}
 
 void scope_init(void) {
 	XAxiCdma_Config *CfgPtr;
@@ -122,6 +152,20 @@ void scope_init(void) {
 	 */
 	XAxiCdma_IntrDisable(&AxiCdmaInstance, XAXICDMA_XR_IRQ_ALL_MASK);
 
+	XGpio_Config *pxConfigPtr;
+	BaseType_t xStatus;
+
+	/* Initialise the GPIO driver. */
+	pxConfigPtr = XGpio_LookupConfig(XPAR_AXI_GPIO_0_DEVICE_ID);
+	xStatus = XGpio_CfgInitialize( &xGpio, pxConfigPtr, XPAR_AXI_GPIO_0_BASEADDR);
+	configASSERT( xStatus == XST_SUCCESS );
+	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
+
+	/* Enable outputs and set low. */
+	XGpio_SetDataDirection( &xGpio, SCOPE_SW_REG, 1); // output
+	XGpio_SetDataDirection( &xGpio, SCOPE_HW_REG, 0 );//input
+	XGpio_DiscreteWrite( &xGpio, SCOPE_SW_REG, sw_reg);
+	scope_set_freq(200);
 }
 
 void scope_add_tasks(void) {
@@ -138,36 +182,14 @@ static void scope_task(void* param) {
 	(void) param;
 	int Status;
 
-
-	for (int i = 0; i < 2048; i++) {
-		ram_buf[i] = (u8)i;
-	}
-
-	Xil_DCacheFlushRange((UINTPTR)ram_buf, 1024);
-	Xil_DCacheFlushRange((UINTPTR)ram_buf2, 1024);
-	//Status = scope_dma_transfer(&AxiCdmaInstance, ram_buf, bram_base, 32);
-	Xil_DCacheFlushRange((UINTPTR)ram_buf, 1024);
-	Xil_DCacheFlushRange((UINTPTR)ram_buf2, 1024);
-	if (Status != XST_SUCCESS) {
-		//while (1) ;
-	}
-
-	for (int i = 0; i < 2048; i++) {
-		ram_buf[i] = 0;
-	}
-
-	Xil_DCacheFlushRange((UINTPTR)ram_buf, 1024);
-	Xil_DCacheFlushRange((UINTPTR)ram_buf2, 1024);
-	Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, ram_buf, 1024);
-	Xil_DCacheFlushRange((UINTPTR)ram_buf, 1024);
-	Xil_DCacheFlushRange((UINTPTR)ram_buf2, 1024);
-	if (Status != XST_SUCCESS) {
-		while (1) ;
-	}
-
-	for (int i = 0; i < 1024; i++) {
-		if (ram_buf[i] != (u8)i) {
-			while (1);
+	while (1) {
+		while ((XGpio_DiscreteRead(&xGpio, SCOPE_HW_REG) & SCOPE_HW_REG_HALF_FULL_MSK) == 1) ;
+		while ((XGpio_DiscreteRead(&xGpio, SCOPE_HW_REG) & SCOPE_HW_REG_HALF_FULL_MSK) == 0) ;
+		// rising edge of scope HW_REG
+		Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, ram_buf, 8192);
+		Xil_DCacheFlushRange((UINTPTR)ram_buf, 8192);
+		if (Status != XST_SUCCESS) {
+			while (1) ;
 		}
 	}
 

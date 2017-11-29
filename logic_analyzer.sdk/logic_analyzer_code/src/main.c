@@ -174,8 +174,8 @@ int main(void)
 	scope_init();
 
 	/* Add all tasks to scheduler */
-	display_add_tasks();
-	//scope_add_tasks();
+	//display_add_tasks();
+	scope_add_tasks();
 
 	//int* bram = XPAR_AXI_BRAM_CTRL_1_S_AXI_BASEADDR;
 	//int a = *bram;
