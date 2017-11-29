@@ -24,17 +24,12 @@ typedef struct{
 
 }screen_state;
 
-static void screen_init();
-static void graphics_update_screen(to_draw my_data, u8 *buffer, u8 *next_screen, u8 scale);
-static void display_task(void* param);
-static void display_draw(u8 *buffer_frame, u8 *destFrame);
-static void clear_screen(u8 *destFrame, u8 *sourceFrame);
-static void graphics_print_char(u16 x, u16 y, char a, int scale, u8 *frame);
-static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup);
-static void graphics_fill_rect_real(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue);
-static void graphics_copy_rect(u16 x1, u16 y1, u16 x2, u16 y2, u16 x3, u16 y3, u8 *buffer);
-
 void display_init(void);
 void display_add_tasks(void);
+
+/*
+ * char table
+ */
+extern const u8 ascii_tab[128][5];
 
 #endif /* VIDEO_DEMO_H_ */

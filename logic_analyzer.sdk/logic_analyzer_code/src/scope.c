@@ -74,12 +74,19 @@
  ****************************************************************************/
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 #include "xaxicdma.h"
 #include "xdebug.h"
 #include "xil_cache.h"
 #include "xparameters.h"
 #include "scope.h"
 #include "xgpio.h"
+
+extern u8 data_buffer[DATA_BUF_SIZE];
+extern u16 last_pos;
+extern u16 cur_pos;
+extern SemaphoreHandle_t sem_draw;
+extern SemaphoreHandle_t sem_data;
 
 #if (!defined(DEBUG))
 extern void xil_printf(const char *format, ...);
@@ -94,7 +101,7 @@ static u8* bram_base = (u8*)0xC0000000;
 #define SCOPE_SW_REG_CLK_DIV_MSK   0x00FFFFFF
 #define SCOPE_SW_REG_ENABLE_MSK    0x80000000
 
-#define SCOPE_HW_REG_HALF_FULL_MSK 0x00000001
+#define SCOPE_HW_REG_ADDR_MSK 0x00001FFF
 
 
 #define DMA_RETRIES 5
@@ -102,8 +109,6 @@ static u8* bram_base = (u8*)0xC0000000;
 static XAxiCdma AxiCdmaInstance;	/* Instance of the XAxiCdma */
 static XGpio xGpio;
 static u32 sw_reg = 0x80989680; // enable with 10 samples/sec
-
-static u8 ram_buf[8192]  __attribute__ ((aligned (64)));
 
 /* Shared variables used to test the callbacks.
  */
@@ -173,7 +178,7 @@ void scope_add_tasks(void) {
 		"scope task", 					/* The text name assigned to the task - for debug only as it is not used by the kernel. */
 		configMINIMAL_STACK_SIZE, 			/* The size of the stack to allocate to the task. */
 		NULL, 								/* The parameter passed to the task - not used in this case. */
-		3, 									/* The priority assigned to the task. */
+		2, 									/* The priority assigned to the task. */
 		NULL );								/* The task handle is not required, so NULL is passed. */
 }
 
@@ -181,15 +186,35 @@ void scope_add_tasks(void) {
 static void scope_task(void* param) {
 	(void) param;
 	int Status;
+	u32 reg;
+	u16 next_pos = 0;
+	u16 size;
+	TickType_t xNextWakeTime = xTaskGetTickCount();
 
 	while (1) {
-		while ((XGpio_DiscreteRead(&xGpio, SCOPE_HW_REG) & SCOPE_HW_REG_HALF_FULL_MSK) == 1) ;
-		while ((XGpio_DiscreteRead(&xGpio, SCOPE_HW_REG) & SCOPE_HW_REG_HALF_FULL_MSK) == 0) ;
-		// rising edge of scope HW_REG
-		Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, ram_buf, 8192);
-		Xil_DCacheFlushRange((UINTPTR)ram_buf, 8192);
-		if (Status != XST_SUCCESS) {
-			while (1) ;
+		if (xSemaphoreTake(sem_data, 0xFFFFFFFF) == pdTRUE) {
+			reg = XGpio_DiscreteRead(&xGpio, SCOPE_HW_REG);
+			next_pos = reg & SCOPE_HW_REG_ADDR_MSK;
+
+			if (next_pos < cur_pos) {
+				// hw data module rolled over
+				size = (next_pos + BRAM_SIZE) - cur_pos;
+				// dma remaining bytes from the top of the bram address space
+				//Status = scope_dma_transfer(&AxiCdmaInstance, bram_base + cur_pos, data_buffer + cur_pos, BRAM_SIZE - cur_pos);
+				// dma rollover bytes from base bram address to the extra space in the dram buffer
+				// so there will always be continuous pieces of data
+				//Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, data_buffer + BRAM_SIZE, next_pos);
+			} else {
+				size = next_pos - cur_pos;
+				//Status = scope_dma_transfer(&AxiCdmaInstance, bram_base + cur_pos, cur_pos + data_buffer, size);
+			}
+			Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, data_buffer, BRAM_SIZE);
+			Xil_DCacheFlushRange((UINTPTR)data_buffer, DATA_BUF_SIZE);
+
+			last_pos = cur_pos;
+			cur_pos = next_pos;
+
+			xSemaphoreGive(sem_draw);
 		}
 	}
 
@@ -237,10 +262,8 @@ static int scope_dma_transfer(XAxiCdma *InstancePtr, u8* src, u8* dest, int num)
 		 */
 		XAxiCdma_Reset(InstancePtr);
 
-		for (int i = 0; i < DMA_RETRIES; i++) {
-			if (XAxiCdma_ResetIsDone(InstancePtr)) {
-				break;
-			}
+		while (!XAxiCdma_ResetIsDone(InstancePtr)) {
+			;
 		}
 
 		/* Reset has failed, print a message to notify the user

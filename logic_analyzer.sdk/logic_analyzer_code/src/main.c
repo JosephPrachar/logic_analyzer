@@ -160,27 +160,30 @@ XScuWdt xWatchDogInstance;
 other modules. */
 XScuGic xInterruptController;
 
+u8 data_buffer[DATA_BUF_SIZE];
+u16 last_pos;
+u16 cur_pos;
+SemaphoreHandle_t sem_draw;
+SemaphoreHandle_t sem_data;
+
 int main(void)
 {
 	/* See http://www.freertos.org/RTOS-Xilinx-Zynq.html for instructions. */
 
 	/* Configure the hardware ready to run the demo. */
-	Xil_DCacheDisable();
-	Xil_ICacheDisable();
+//	Xil_DCacheDisable();
+//	Xil_ICacheDisable();
 	prvSetupHardware();
+	sem_draw = xSemaphoreCreateCounting(1, 0);
+	sem_data = xSemaphoreCreateCounting(1, 1);
 
 	/* Initialize all modules */
 	display_init();
 	scope_init();
 
 	/* Add all tasks to scheduler */
-	//display_add_tasks();
+	display_add_tasks();
 	scope_add_tasks();
-
-	//int* bram = XPAR_AXI_BRAM_CTRL_1_S_AXI_BASEADDR;
-	//int a = *bram;
-	//*bram = 0xFF;
-	//int b = *bram;
 
 	vTaskStartScheduler();
 
