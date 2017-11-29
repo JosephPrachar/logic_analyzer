@@ -118,7 +118,7 @@ static volatile int Error = 0;	/* Dma Error occurs */
 static int scope_dma_transfer(XAxiCdma *InstancePtr, u8* src, u8* dest, int num);
 static void scope_task(void* param) ;
 
-static void scope_set_freq(unsigned int freq) {
+void scope_set_freq(unsigned int freq) {
 	unsigned int div = SCOPE_CLK_IN / freq;
 	if (div > 0xFFFFFF) div = 0xFFFFFF;
 	sw_reg &= ~SCOPE_SW_REG_CLK_DIV_MSK;
@@ -126,12 +126,12 @@ static void scope_set_freq(unsigned int freq) {
 	XGpio_DiscreteWrite(&xGpio, SCOPE_SW_REG, sw_reg);
 }
 
-static void scope_enable(void) {
+void scope_enable(void) {
 	sw_reg |= SCOPE_SW_REG_ENABLE_MSK;
 	XGpio_DiscreteWrite(&xGpio, SCOPE_SW_REG, sw_reg);
 }
 
-static void scope_disable(void) {
+void scope_disable(void) {
 	sw_reg &= ~SCOPE_SW_REG_ENABLE_MSK;
 	XGpio_DiscreteWrite(&xGpio, SCOPE_SW_REG, sw_reg);
 }

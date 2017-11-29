@@ -18,6 +18,7 @@ extern u16 cur_pos;
 extern SemaphoreHandle_t sem_draw;
 extern SemaphoreHandle_t sem_data;
 
+#define DATA_SIZE (cur_pos - last_pos)
 /*
  * char descriptions
  */
@@ -62,7 +63,7 @@ static void display_screen_init(void);
 static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_screen, u8 scale);
 static void graphics_print_char(u16 x, u16 y, char a, int scale, u8 *frame);
 static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup);
-static void graphics_fill_rect_real(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue);
+static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue);
 static void graphics_copy_rect(u16 x1, u16 y1, u16 x2, u16 y2, u16 x3, u16 y3, u8 *buffer);
 
 
@@ -127,7 +128,7 @@ static void display_task(void* param) {
 	display_screen_init();
 	while (1) {
 		if (xSemaphoreTake(sem_draw, 0xFFFFFFFF) == pdTRUE) {
-			current_screen.channel_enable[3] = 1;
+			//current_screen.channel_enable[3] = 1;
 			memcpy(&revert, &current_screen, sizeof(screen_state));
 			new_data.cmd_line[0] = 't';
 			new_data.cmd_line[1] = 'e';
@@ -141,7 +142,6 @@ static void display_task(void* param) {
 			if(i > 9){
 				new_data.cmd_line[0] = '\0';
 			}else{
-				memset(new_data.data, 0xFF, DATA_SIZE);
 			}
 
 			display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
@@ -175,6 +175,7 @@ static void display_screen_init(void) {
 		current_screen.channel_height[i] = 258 + i * 90;
 		current_screen.channel_low_or_high[i] = 0;
 		current_screen.channel_line_len[i] = 0;
+		current_screen.channel_enable[i] = 1;
 	}
 	memset(pFrames[0], 255, FRAME_SIZE);
 	memset(pFrames[1], 255, FRAME_SIZE);
@@ -189,7 +190,7 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 			if(!current_screen.channel_enable[k]){
 				continue;
 			}
-			graphics_fill_rect_real(current_screen.channel_loc[0], 181 + k * 90,
+			graphics_fill_rect(current_screen.channel_loc[0], 181 + k * 90,
 									current_screen.channel_loc[0] + DATA_SIZE,
 									259 + k * 90, next_screen, 255, 255, 255);
 		}
@@ -200,12 +201,11 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 			if(!current_screen.channel_enable[k]){
 				continue;
 			}
-			graphics_fill_rect_real(current_screen.channel_loc[0], 181 + k * 90,
+			graphics_fill_rect(current_screen.channel_loc[0], 181 + k * 90,
 									current_screen.channel_loc[0] + diff,
 									259 + k * 90, next_screen, 255, 255, 255);
-			graphics_fill_rect_real(155, 181 + k * 90, 155 + DATA_SIZE - diff,
+			graphics_fill_rect(155, 181 + k * 90, 155 + DATA_SIZE - diff,
 									259 + k * 90, next_screen, 255, 255, 255);
-
 		}
 	}
 
@@ -219,10 +219,10 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 				x1 = current_screen.channel_loc[j];
 				x2 = 1599;
 				y1 = current_screen.channel_height[j];
-				graphics_fill_rect_real(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
+				graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
 				current_screen.channel_loc[j] = 155;
 				current_screen.channel_line_len[j] = 0;
-			}else if((current_screen.channel_low_or_high[j] << j) != (my_data.data[i] & (mask << j))){
+			}else if((current_screen.channel_low_or_high[j] << j) != ((data_buffer+cur_pos)[i] & (mask << j))){
 				x1 = current_screen.channel_loc[j];
 				x2 = current_screen.channel_loc[j] + current_screen.channel_line_len[j];
 				if(current_screen.channel_low_or_high[j]){
@@ -234,8 +234,8 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 					y2 = current_screen.channel_height[j];
 					current_screen.channel_height[j] = y1;
 				}
-				graphics_fill_rect_real(x1, y1, x2, y1 - 1, next_screen, 0, 0, 0);
-				graphics_fill_rect_real(x2, y1, x2, y2, next_screen, 0, 0, 0);
+				graphics_fill_rect(x1, y1, x2, y1 - 1, next_screen, 0, 0, 0);
+				graphics_fill_rect(x2, y1, x2, y2, next_screen, 0, 0, 0);
 				current_screen.channel_loc[j] = x2;
 				current_screen.channel_low_or_high[j] = !current_screen.channel_low_or_high[j];
 				current_screen.channel_line_len[j] = 0;
@@ -243,7 +243,7 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 				x1 = current_screen.channel_loc[j];
 				x2 = current_screen.channel_loc[j] + current_screen.channel_line_len[j];
 				y1 = current_screen.channel_height[j];
-				graphics_fill_rect_real(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
+				graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
 				current_screen.channel_loc[j] = x2;
 				current_screen.channel_line_len[j] = 0;
 				if(current_screen.channel_loc[j] + 20 < 1599){
@@ -253,7 +253,7 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 						y1 = current_screen.channel_height[j] - 77;
 					}
 
-					graphics_fill_rect_real(x2, y1, x2 + 20, y1 + 78, next_screen, 255, 255, 255);
+					graphics_fill_rect(x2, y1, x2 + 20, y1 + 78, next_screen, 255, 255, 255);
 
 				}
 			}else{
@@ -269,16 +269,16 @@ static void graphics_update_screen(to_draw my_data, u8 *sourceFrame, u8 *next_sc
 static void display_clear_screen(u8 *destFrame, u8 *sourceFrame){
 	char temp[10] = "channel 0";
 	int i;
-	graphics_fill_rect_real(0, 149, 1599, 151, destFrame, 0, 0, 0);
-	graphics_fill_rect_real(0, 174, 1599, 176, destFrame, 0, 0, 0);
-	graphics_fill_rect_real(149, 150, 151, 899, destFrame, 0, 0, 0);
-	graphics_fill_rect_real(0, 149, 1599, 151, sourceFrame, 0, 0, 0);
-	graphics_fill_rect_real(0, 174, 1599, 176, sourceFrame, 0, 0, 0);
-	graphics_fill_rect_real(149, 150, 151, 899, sourceFrame, 0, 0, 0);
+	graphics_fill_rect(0, 149, 1599, 151, destFrame, 0, 0, 0);
+	graphics_fill_rect(0, 174, 1599, 176, destFrame, 0, 0, 0);
+	graphics_fill_rect(149, 150, 151, 899, destFrame, 0, 0, 0);
+	graphics_fill_rect(0, 149, 1599, 151, sourceFrame, 0, 0, 0);
+	graphics_fill_rect(0, 174, 1599, 176, sourceFrame, 0, 0, 0);
+	graphics_fill_rect(149, 150, 151, 899, sourceFrame, 0, 0, 0);
 
 	for(i = 0; i < 8; i++){
-		graphics_fill_rect_real(151, 264 + i * 90, 1599, 266 + i * 90, destFrame, 130, 130, 130);
-		graphics_fill_rect_real(151, 264 + i * 90, 1599, 266 + i * 90, sourceFrame, 130, 130, 130);
+		graphics_fill_rect(151, 264 + i * 90, 1599, 266 + i * 90, destFrame, 130, 130, 130);
+		graphics_fill_rect(151, 264 + i * 90, 1599, 266 + i * 90, sourceFrame, 130, 130, 130);
 
 	}
 	for(i = 0; i < 8; i++){
@@ -293,7 +293,7 @@ static void display_clear_screen(u8 *destFrame, u8 *sourceFrame){
 
 
 }
-static void graphics_fill_rect_real(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue) {
+static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue) {
  u16 i, j;
  u32 k;
  for (i = x1; i <= x2; i++)
@@ -358,9 +358,9 @@ void graphics_print_char(u16 x, u16 y, char a, int scale, u8 *frame) { /* int   
 			x1 = x + i + scale - 1;
 			y1 = y + j + scale - 1;
         	if ((1<<jbit) & ascii_tab[a][ibit])
-        		graphics_fill_rect_real(x + i, y + j, x1, y1, frame, 0, 0, 0);
+        		graphics_fill_rect(x + i, y + j, x1, y1, frame, 0, 0, 0);
             else
-            	graphics_fill_rect_real(x + i, y + j, x1, y1, frame, 255, 255, 255);
+            	graphics_fill_rect(x + i, y + j, x1, y1, frame, 255, 255, 255);
 		}
 	}
  }

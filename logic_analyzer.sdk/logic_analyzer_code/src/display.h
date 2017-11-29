@@ -6,11 +6,9 @@
 #define WIDTH 1600
 #define HEIGHT 900
 #define FRAME_SIZE (WIDTH*HEIGHT*3)
-#define DATA_SIZE 200
 
 typedef struct{
 	char cmd_line[80];
-	u8  data [DATA_SIZE];
 }to_draw;
 
 typedef struct{

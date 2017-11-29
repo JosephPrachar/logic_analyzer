@@ -127,6 +127,7 @@
 #include "xil_exception.h"
 #include "xil_cache.h"
 
+#include "keyboard.h"
 #include "display.h"
 #include "scope.h"
 
@@ -171,17 +172,17 @@ int main(void)
 	/* See http://www.freertos.org/RTOS-Xilinx-Zynq.html for instructions. */
 
 	/* Configure the hardware ready to run the demo. */
-//	Xil_DCacheDisable();
-//	Xil_ICacheDisable();
 	prvSetupHardware();
 	sem_draw = xSemaphoreCreateCounting(1, 0);
 	sem_data = xSemaphoreCreateCounting(1, 1);
 
 	/* Initialize all modules */
+	keyboard_init();
 	display_init();
 	scope_init();
 
 	/* Add all tasks to scheduler */
+	keyboard_add_tasks();
 	display_add_tasks();
 	scope_add_tasks();
 

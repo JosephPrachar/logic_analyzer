@@ -7,4 +7,8 @@
 void scope_init(void);
 void scope_add_tasks(void);
 
+void scope_set_freq(unsigned int freq);
+void scope_enable(void);
+void scope_disable(void);
+
 #endif /* SCOPE_H_ */
