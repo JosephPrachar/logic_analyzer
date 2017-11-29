@@ -19,6 +19,8 @@ extern SemaphoreHandle_t sem_draw;
 extern SemaphoreHandle_t sem_data;
 
 #define DATA_SIZE (cur_pos - last_pos)
+
+to_write cmnd_buff;
 /*
  * char descriptions
  */
@@ -54,7 +56,6 @@ static int cur_frame = 0;
  */
 static screen_state current_screen;
 static screen_state revert;
-to_draw new_data;
 
 static void display_task(void* param);
 static void display_draw(u8 *buffer_frame, u8 *destFrame);
@@ -128,22 +129,7 @@ static void display_task(void* param) {
 	display_screen_init();
 	while (1) {
 		if (xSemaphoreTake(sem_draw, 0xFFFFFFFF) == pdTRUE) {
-			//current_screen.channel_enable[3] = 1;
 			memcpy(&revert, &current_screen, sizeof(screen_state));
-			new_data.cmd_line[0] = 't';
-			new_data.cmd_line[1] = 'e';
-			new_data.cmd_line[2] = 's';
-			new_data.cmd_line[3] = 't';
-			new_data.cmd_line[4] = ' ';
-			new_data.cmd_line[5] = '1' + i;
-			new_data.cmd_line[6] = '\n';
-			new_data.cmd_line[7] = '\0';
-			i++;
-			if(i > 9){
-				new_data.cmd_line[0] = '\0';
-			}else{
-			}
-
 			display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
 			DisplayChangeFrame(&dispCtrl, !cur_frame);
 			memcpy(&current_screen, &revert , sizeof(screen_state));
@@ -262,7 +248,7 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 				}
 	}
 
-	graphics_print_string(current_screen.cmd_line_x, current_screen.cmd_line_y, new_data.cmd_line, 2, next_screen, 0);
+	graphics_print_string(current_screen.cmd_line_x, current_screen.cmd_line_y, cmnd_buff.cmd_line + cmnd_buff.tail , 2, next_screen, 0);
 }
 
 
@@ -308,7 +294,7 @@ static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red
 static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup){
 	int i = 0;
 	int temp;
-	while(string[i] != '\0'){
+	while(cmnd_buff.tail != cmnd_buff.head){
 		if(string[i] == '\n'){
 			y = y + (CHAR_HEIGHT * scale + 3);
 			x = 3;
@@ -322,11 +308,18 @@ static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *fra
 			current_screen.cmd_line_y = y;
 			current_screen.cmd_line_x = x;
 
+		}else if( string[i] == 8){
+			if( current_screen.cmd_line_x > 3 + 5 * scale + 2){
+				x = x - 5 * scale + 2;
+				graphics_print_char(x , y, ' ', scale, frame);
+				current_screen.cmd_line_x = x;
+			}
 		}
 		else{
 			graphics_print_char(x, y, string[i], scale, frame);
 			x = x + 5 * scale + 2;
 		}
+		cmnd_buff.tail = (cmnd_buff.tail + 1)%LINE_LENGTH;
 		i++;
 	}
 	if(!setup){

@@ -8,6 +8,7 @@
 #include "xil_printf.h"
 #include "semphr.h"
 #include "scope.h"
+#include "display.h"
 
 #include "xscugic.h"
 
@@ -18,8 +19,7 @@
 #define RESP_OK   "Command Successful"
 #define RESP_FAIL "Command Error"
 
-#define LINE_LENGTH 40
-
+extern to_write cmnd_buff;
 extern XScuGic xInterruptController;
 
 #define UART_DEVICE_ID		XPAR_XUARTPS_0_DEVICE_ID
@@ -74,6 +74,9 @@ static void keyboard_task(void* param) {
 			} else if (pos < LINE_LENGTH && input_char != '\0'){
 				cmd_line_buf[pos++] = input_char;
 			}
+			cmnd_buff.cmd_line[cmnd_buff.head] = input_char;
+			cmnd_buff.head = (cmnd_buff.head + 1) % LINE_LENGTH;
+			cmnd_buff.cmd_line[cmnd_buff.head] = '\0';
 		}
 		vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
 	}
