@@ -19,6 +19,8 @@ extern SemaphoreHandle_t sem_draw;
 extern SemaphoreHandle_t sem_data;
 
 #define DATA_SIZE (cur_pos - last_pos)
+
+extern char cmd_line_buf[LINE_LENGTH];
 /*
  * char descriptions
  */
@@ -52,11 +54,8 @@ static int cur_frame = 0;
 /*
  * data for screen
  */
-static screen_state current_screen;
+screen_state current_screen;
 static screen_state revert;
-to_draw new_data;
-
-volatile u8 flag = 0;
 
 static void display_task(void* param);
 static void display_draw(u8 *buffer_frame, u8 *destFrame);
@@ -123,40 +122,18 @@ void display_add_tasks(void) {
 
 static void display_task(void* param) {
 	static int reset = 0;
-	static int i = 0;
-
 	(void)param;
 	TickType_t xNextWakeTime = xTaskGetTickCount();
 	display_screen_init();
 	while (1) {
 		if (xSemaphoreTake(sem_draw, 0xFFFFFFFF) == pdTRUE) {
-			//current_screen.channel_enable[3] = 1;
+
 			memcpy(&revert, &current_screen, sizeof(screen_state));
-			new_data.cmd_line[0] = 't';
-			new_data.cmd_line[1] = 'e';
-			new_data.cmd_line[2] = 's';
-			new_data.cmd_line[3] = 't';
-			new_data.cmd_line[4] = ' ';
-			new_data.cmd_line[5] = '1' + i;
-			new_data.cmd_line[6] = '\n';
-			new_data.cmd_line[7] = '\0';
-			i++;
-			if(i > 9){
-				new_data.cmd_line[0] = '\0';
-			}else{
-			}
-			if (DATA_SIZE != 0) {
-
-				display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
-				DisplayChangeFrame(&dispCtrl, !cur_frame);
-				memcpy(&current_screen, &revert , sizeof(screen_state));
-				display_draw(pFrames[!cur_frame], pFrames[cur_frame]);
-				cur_frame = (!cur_frame);
-
-				if (flag != 0) {
-					while (1) ;
-				}
-			}
+			display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
+			DisplayChangeFrame(&dispCtrl, !cur_frame);
+			memcpy(&current_screen, &revert , sizeof(screen_state));
+			display_draw(pFrames[!cur_frame], pFrames[cur_frame]);
+			cur_frame = (!cur_frame);
 			vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
 			xSemaphoreGive(sem_data);
 		}
@@ -169,7 +146,7 @@ static void display_draw(u8 *sourceFrame, u8 *destFrame) {
 	static int i = 0;
 
 
-	graphics_update_screen(destFrame, 1);
+	graphics_update_screen(destFrame, 10);
 	Xil_DCacheFlushRange((unsigned int) destFrame, FRAME_SIZE);
 
 
@@ -199,14 +176,11 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 		if(!current_screen.channel_enable[k]){
 			continue;
 		}
-		if(1599 - current_screen.channel_loc[k] > DATA_SIZE / scale) {
-//			graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
-//								current_screen.channel_loc[k] + DATA_SIZE /scale,
-//								259 + k * 90, next_screen, 255, 255, 0xAA);
-			if (flag != 0) {
-				while (1) ;
-			}
-		} else {
+		if(1599 - current_screen.channel_loc[k] > DATA_SIZE / scale){
+			//graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
+			//					current_screen.channel_loc[k] + DATA_SIZE /scale,
+				//				259 + k * 90, next_screen, 255, 255, 255);
+		}else{
 			int diff = 1599 - current_screen.channel_loc[k];
 			graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
 									current_screen.channel_loc[k] + diff,
@@ -273,7 +247,9 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 				}
 	}
 
-	graphics_print_string(current_screen.cmd_line_x, current_screen.cmd_line_y, new_data.cmd_line, 2, next_screen, 0);
+	graphics_fill_rect(16, 2, 16 + scale * (CHAR_WIDTH +2) * LINE_LENGTH, 2 + CHAR_HEIGHT * scale, next_screen, 255, 255, 255);
+	graphics_print_string(3, 2, ">", 2, next_screen, 0);
+	graphics_print_string(16, 2,  cmd_line_buf , 2, next_screen, 0);
 }
 
 
@@ -293,15 +269,12 @@ static void display_clear_screen(u8 *destFrame, u8 *sourceFrame){
 
 	}
 	for(i = 0; i < 8; i++){
-			graphics_print_string(5, 208 + (i * 90), temp, 2, destFrame, 1);
-			graphics_print_string(5, 208 + (i * 90), temp, 2, sourceFrame, 1);
-			temp[8]++;
+		graphics_print_string(5, 208 + (i * 90), temp, 2, destFrame, 1);
+		graphics_print_string(5, 208 + (i * 90), temp, 2, sourceFrame, 1);
+		temp[8]++;
 	}
-	graphics_print_string(5, 3, ">",2, destFrame, 0);
-	graphics_print_string(5, 3, ">",2, sourceFrame, 0);
-
-
-
+	graphics_print_string(3, 2, ">",2, destFrame, 0);
+	graphics_print_string(3, 2, ">",2, sourceFrame, 0);
 
 }
 static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue) {
@@ -318,47 +291,15 @@ static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red
 
 static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup){
 	int i = 0;
-	int temp;
-	while(string[i] != '\0'){
-		if(string[i] == '\n'){
-			y = y + (CHAR_HEIGHT * scale + 3);
-			x = 3;
-			if(y > 98){
-				y = 98;
-				graphics_copy_rect(3, 21, 500, 131, 3, 2, frame);;
-			}
-			graphics_print_char(x , y, '>', scale, frame);
-			x = x + 5 * scale + 2;
-
-			current_screen.cmd_line_y = y;
-			current_screen.cmd_line_x = x;
-
-		}
-		else{
+	while(string[i]){
 			graphics_print_char(x, y, string[i], scale, frame);
 			x = x + 5 * scale + 2;
-		}
-		i++;
+			i++;
 	}
 	if(!setup){
 		graphics_print_char(x, y, '_', scale, frame);
-		current_screen.cmd_line_x = x;
 	}
 
-}
-
-static void graphics_copy_rect(u16 x1, u16 y1, u16 x2, u16 y2, u16 x3, u16 y3, u8 *buffer){
-	u16 i, j, l, m;
-	 u32 k, s;
-	 for (i = x1, l = x3; i <= x2; i++, l++){
-	     for (j = y1, m = y3; j <= y2; j++, m++){
-	         k = xy_to_i(l , m);
-	         s = xy_to_i(i , j);
-	 	 	 buffer[k] = buffer[s];
-	 	 	 buffer[k+1] = buffer[s];
-	 	 	 buffer[k+2] = buffer[s];
-	     }
-	 }
 }
 
 
