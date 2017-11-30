@@ -63,21 +63,17 @@ static void keyboard_task(void* param) {
 	(void) param;
 	TickType_t xNextWakeTime = xTaskGetTickCount();
 	XUartPs_Recv(&UartPs, (u8*)&input_char, 1);
-	cmnd_buff.head = 0;
-	cmnd_buff.tail = 0;
 	while (1) {
 		if (XUartPs_Recv(&UartPs, (u8*)&input_char, 1) == 1) {
-			if (input_char == 8 && pos != 0) { // backspace
+			if ((input_char == '\177'  || input_char == 8)&& pos != 0) { // backspace
 				cmd_line_buf[--pos] = '\0';
 			} else if (input_char == '\n' || input_char == '\r') {
 				keyboard_parse_line();
 				memset(cmd_line_buf, 0x00, LINE_LENGTH);
 				pos = 0;
-			} else if (pos < LINE_LENGTH && input_char != '\0'){
+			} else if (pos < LINE_LENGTH && input_char != '\0' && input_char != '\177' && input_char != 8){
 				cmd_line_buf[pos++] = input_char;
 			}
-			cmnd_buff.cmd_line[cmnd_buff.head] = input_char;
-			cmnd_buff.head = (cmnd_buff.head + 1) % LINE_LENGTH;
 		}
 		vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
 	}
