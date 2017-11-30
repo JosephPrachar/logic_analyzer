@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="/home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/standalone_bsp_0_xaxivdma_example_selftest_1/Debug" key="tcf_debug_app_selection"/>
+	<item value="/home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/standalone_bsp_0_xuartps_intr_example_1/Debug" key="tcf_debug_app_selection"/>
 	<item value="/home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.runs/impl_1" key="debug_files_selection"/>
-	<item value="/home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/standalone_bsp_0_xaxivdma_example_selftest_1/Debug" key="last_stored_selection"/>
+	<item value="/home/joseph/school/year4/cpe439/logic_analyzer/logic_analyzer.sdk/standalone_bsp_0_xuartps_intr_example_1/Debug" key="last_stored_selection"/>
 </section>

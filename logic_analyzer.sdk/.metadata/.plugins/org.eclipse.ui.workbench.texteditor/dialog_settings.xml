@@ -2,24 +2,28 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="UART" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="interruptHan"/>
+			<item value="intc"/>
+			<item value="my_data.data"/>
 			<item value="uart"/>
 			<item value="UART"/>
 			<item value="vtc"/>
 		</list>
 		<list key="replacehistory">
+			<item value="(data_buffer+cur_pos)"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="317" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="466" key="DIALOG_HEIGHT"/>
-		<item value="802" key="DIALOG_X_ORIGIN"/>
-		<item value="248" key="DIALOG_Y_ORIGIN"/>
+		<item value="377" key="DIALOG_X_ORIGIN"/>
+		<item value="293" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

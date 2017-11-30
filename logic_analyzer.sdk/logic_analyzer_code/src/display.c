@@ -56,6 +56,8 @@ static screen_state current_screen;
 static screen_state revert;
 to_draw new_data;
 
+volatile u8 flag = 0;
+
 static void display_task(void* param);
 static void display_draw(u8 *buffer_frame, u8 *destFrame);
 static void display_clear_screen(u8 *destFrame, u8 *sourceFrame);
@@ -143,12 +145,18 @@ static void display_task(void* param) {
 				new_data.cmd_line[0] = '\0';
 			}else{
 			}
+			if (DATA_SIZE != 0) {
 
-			display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
-			DisplayChangeFrame(&dispCtrl, !cur_frame);
-			memcpy(&current_screen, &revert , sizeof(screen_state));
-			display_draw(pFrames[!cur_frame], pFrames[cur_frame]);
-			cur_frame = (!cur_frame);
+				display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
+				DisplayChangeFrame(&dispCtrl, !cur_frame);
+				memcpy(&current_screen, &revert , sizeof(screen_state));
+				display_draw(pFrames[!cur_frame], pFrames[cur_frame]);
+				cur_frame = (!cur_frame);
+
+				if (flag != 0) {
+					while (1) ;
+				}
+			}
 			vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
 			xSemaphoreGive(sem_data);
 		}
@@ -161,7 +169,7 @@ static void display_draw(u8 *sourceFrame, u8 *destFrame) {
 	static int i = 0;
 
 
-	graphics_update_screen(destFrame, 10);
+	graphics_update_screen(destFrame, 1);
 	Xil_DCacheFlushRange((unsigned int) destFrame, FRAME_SIZE);
 
 
@@ -191,11 +199,14 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 		if(!current_screen.channel_enable[k]){
 			continue;
 		}
-		if(1599 - current_screen.channel_loc[k] > DATA_SIZE / scale)
-			graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
-								current_screen.channel_loc[k] + DATA_SIZE /scale,
-								259 + k * 90, next_screen, 255, 255, 255);
-		else{
+		if(1599 - current_screen.channel_loc[k] > DATA_SIZE / scale) {
+//			graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
+//								current_screen.channel_loc[k] + DATA_SIZE /scale,
+//								259 + k * 90, next_screen, 255, 255, 0xAA);
+			if (flag != 0) {
+				while (1) ;
+			}
+		} else {
 			int diff = 1599 - current_screen.channel_loc[k];
 			graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
 									current_screen.channel_loc[k] + diff,

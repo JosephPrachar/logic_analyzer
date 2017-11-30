@@ -25,7 +25,7 @@ module tb_data_in(
     );
     
     logic clk = 0;
-    logic [31:0] sw_reg = 32'h80000000;
+    logic [31:0] sw_reg = 32'h80000010;
     logic [31:0] hw_reg;
     logic [12:0] addr;
     logic [7:0] din;

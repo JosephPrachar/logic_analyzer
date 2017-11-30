@@ -170,7 +170,7 @@ void scope_init(void) {
 	XGpio_SetDataDirection( &xGpio, SCOPE_SW_REG, 1); // output
 	XGpio_SetDataDirection( &xGpio, SCOPE_HW_REG, 0 );//input
 	XGpio_DiscreteWrite( &xGpio, SCOPE_SW_REG, sw_reg);
-	scope_set_freq(200);
+	scope_set_freq(500);
 }
 
 void scope_add_tasks(void) {
@@ -195,7 +195,9 @@ static void scope_task(void* param) {
 		if (xSemaphoreTake(sem_data, 0xFFFFFFFF) == pdTRUE) {
 			reg = XGpio_DiscreteRead(&xGpio, SCOPE_HW_REG);
 			next_pos = reg & SCOPE_HW_REG_ADDR_MSK;
-
+			Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, data_buffer, BRAM_SIZE);
+			Xil_DCacheFlushRange((UINTPTR)data_buffer, DATA_BUF_SIZE);
+			next_pos = *(u16*)&data_buffer[4];
 			if (next_pos < cur_pos) {
 				// hw data module rolled over
 				size = (next_pos + BRAM_SIZE) - cur_pos;
@@ -208,8 +210,7 @@ static void scope_task(void* param) {
 				size = next_pos - cur_pos;
 				//Status = scope_dma_transfer(&AxiCdmaInstance, bram_base + cur_pos, cur_pos + data_buffer, size);
 			}
-			Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, data_buffer, BRAM_SIZE);
-			Xil_DCacheFlushRange((UINTPTR)data_buffer, DATA_BUF_SIZE);
+
 
 			last_pos = cur_pos;
 			cur_pos = next_pos;

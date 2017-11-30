@@ -38,6 +38,7 @@ module fsm(
     // [0]   reg_out: half filled flag
     
     logic [29:0] clk_div_ct = 0;
+    logic        clk2 = 0;
     logic        capture_clk = 0;
     
     logic [3:0]  led_reg;
@@ -62,8 +63,8 @@ module fsm(
      
      assign en = 1'd1;
      assign we = 1;
-     assign dout = dout_reg;
-     assign addr = addr_reg;
+     assign dout = capture_clk == 1 ? (clk_div_ct[1] == 0 ? addr_reg[7:0] : {3'd0,addr_reg[12:8]}) : dout_reg;
+     assign addr = capture_clk == 1 ? (clk_div_ct[1] == 0 ? 0             : 1                    ) : addr_reg;
      assign leds = { addr_reg[9:6] };
      assign reg_out = { 20'd0, addr_reg };
        
