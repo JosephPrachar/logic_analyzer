@@ -109,7 +109,7 @@ static u8* bram_base = (u8*)0xC0000000;
 static XAxiCdma AxiCdmaInstance;	/* Instance of the XAxiCdma */
 static XGpio xGpio;
 static u32 sw_reg = 0x80989680; // enable with 10 samples/sec
-
+u8 scale = 6;
 /* Shared variables used to test the callbacks.
  */
 static volatile int Done = 0;	/* Dma transfer is done */

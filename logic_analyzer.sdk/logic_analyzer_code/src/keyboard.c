@@ -19,7 +19,7 @@
 #define RESP_OK   "Command Successful"
 #define RESP_FAIL "Command Error"
 
-to_write cmnd_buff;
+extern u8 scale;
 extern XScuGic xInterruptController;
 
 #define UART_DEVICE_ID		XPAR_XUARTPS_0_DEVICE_ID
