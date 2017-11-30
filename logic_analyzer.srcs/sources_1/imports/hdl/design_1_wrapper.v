@@ -73,10 +73,10 @@ module design_1_wrapper
   inout hdmi_out_ddc_sda_io;
   output [3:0] leds;
   
-  wire [12:0]BRAM_PORTB_addr;
+  wire [10:0]BRAM_PORTB_addr;
   wire BRAM_PORTB_clk;
-  wire [7:0]BRAM_PORTB_din;
-  wire [7:0]BRAM_PORTB_dout;
+  wire [31:0]BRAM_PORTB_din;
+  wire [31:0]BRAM_PORTB_dout;
   wire BRAM_PORTB_en;
   wire [0:0]BRAM_PORTB_we;
   wire [14:0]DDR_addr;

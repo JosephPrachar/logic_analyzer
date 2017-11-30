@@ -197,7 +197,6 @@ static void scope_task(void* param) {
 			next_pos = reg & SCOPE_HW_REG_ADDR_MSK;
 			Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, data_buffer, BRAM_SIZE);
 			Xil_DCacheFlushRange((UINTPTR)data_buffer, DATA_BUF_SIZE);
-			next_pos = *(u16*)&data_buffer[4];
 			if (next_pos < cur_pos) {
 				// hw data module rolled over
 				size = (next_pos + BRAM_SIZE) - cur_pos;

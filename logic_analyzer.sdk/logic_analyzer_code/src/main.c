@@ -161,6 +161,7 @@ XScuWdt xWatchDogInstance;
 other modules. */
 XScuGic xInterruptController;
 
+u8 extra_buf[10];
 u8 data_buffer[DATA_BUF_SIZE];
 u16 last_pos;
 u16 cur_pos;

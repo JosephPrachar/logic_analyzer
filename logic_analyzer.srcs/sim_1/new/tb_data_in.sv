@@ -47,10 +47,5 @@ module tb_data_in(
         .en(en),
         .we(we),
         .leds(leds));
-    
-    initial begin
-        #100000;
-        
-        $finish(0);
-    end
+   
 endmodule

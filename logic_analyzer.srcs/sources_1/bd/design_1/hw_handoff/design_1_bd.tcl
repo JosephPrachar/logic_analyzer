@@ -235,19 +235,19 @@ CONFIG.TKEEP_REMAP {tkeep[2:0]} \
 CONFIG.Byte_Size {9} \
 CONFIG.Enable_32bit_Address {false} \
 CONFIG.Enable_B {Use_ENB_Pin} \
-CONFIG.Fill_Remaining_Memory_Locations {true} \
+CONFIG.Fill_Remaining_Memory_Locations {false} \
 CONFIG.Memory_Type {True_Dual_Port_RAM} \
 CONFIG.Port_B_Clock {100} \
 CONFIG.Port_B_Enable_Rate {100} \
 CONFIG.Port_B_Write_Rate {50} \
-CONFIG.Read_Width_B {8} \
+CONFIG.Read_Width_B {32} \
 CONFIG.Register_PortA_Output_of_Memory_Primitives {true} \
 CONFIG.Register_PortB_Output_of_Memory_Primitives {true} \
-CONFIG.Remaining_Memory_Locations {AA} \
+CONFIG.Remaining_Memory_Locations {0} \
 CONFIG.Use_Byte_Write_Enable {false} \
 CONFIG.Use_RSTA_Pin {false} \
 CONFIG.Use_RSTB_Pin {false} \
-CONFIG.Write_Width_B {8} \
+CONFIG.Write_Width_B {32} \
 CONFIG.use_bram_block {Stand_Alone} \
  ] $blk_mem_gen_0
 

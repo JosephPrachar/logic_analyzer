@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.2 (lin64) Build 1909853 Thu Jun 15 18:39:10 MDT 2017
-//Date        : Tue Nov 28 18:39:27 2017
+//Date        : Wed Nov 29 20:43:39 2017
 //Host        : joseph-Dell-Precision-M3800 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target design_1.bd
 //Design      : design_1
@@ -51,10 +51,10 @@ module design_1
     R_CLOCK,
     data_hw_reg_tri_i,
     data_sw_reg_tri_o);
-  input [12:0]BRAM_PORTB_addr;
+  input [10:0]BRAM_PORTB_addr;
   input BRAM_PORTB_clk;
-  input [7:0]BRAM_PORTB_din;
-  output [7:0]BRAM_PORTB_dout;
+  input [31:0]BRAM_PORTB_din;
+  output [31:0]BRAM_PORTB_dout;
   input BRAM_PORTB_en;
   input [0:0]BRAM_PORTB_we;
   inout [14:0]DDR_addr;
@@ -92,10 +92,10 @@ module design_1
   input [31:0]data_hw_reg_tri_i;
   output [31:0]data_sw_reg_tri_o;
 
-  wire [12:0]BRAM_PORTB_1_ADDR;
+  wire [10:0]BRAM_PORTB_1_ADDR;
   wire BRAM_PORTB_1_CLK;
-  wire [7:0]BRAM_PORTB_1_DIN;
-  wire [7:0]BRAM_PORTB_1_DOUT;
+  wire [31:0]BRAM_PORTB_1_DIN;
+  wire [31:0]BRAM_PORTB_1_DOUT;
   wire BRAM_PORTB_1_EN;
   wire [0:0]BRAM_PORTB_1_WE;
   wire [12:0]axi_bram_ctrl_0_BRAM_PORTA_ADDR;
@@ -422,12 +422,12 @@ module design_1
   wire v_tc_0_vtiming_out_VSYNC;
   wire [2:0]xlconcat_0_dout;
 
-  assign BRAM_PORTB_1_ADDR = BRAM_PORTB_addr[12:0];
+  assign BRAM_PORTB_1_ADDR = BRAM_PORTB_addr[10:0];
   assign BRAM_PORTB_1_CLK = BRAM_PORTB_clk;
-  assign BRAM_PORTB_1_DIN = BRAM_PORTB_din[7:0];
+  assign BRAM_PORTB_1_DIN = BRAM_PORTB_din[31:0];
   assign BRAM_PORTB_1_EN = BRAM_PORTB_en;
   assign BRAM_PORTB_1_WE = BRAM_PORTB_we[0];
-  assign BRAM_PORTB_dout[7:0] = BRAM_PORTB_1_DOUT;
+  assign BRAM_PORTB_dout[31:0] = BRAM_PORTB_1_DOUT;
   assign HDMI_out_clk_n = rgb2dvi_0_TMDS_CLK_N;
   assign HDMI_out_clk_p = rgb2dvi_0_TMDS_CLK_P;
   assign HDMI_out_data_n[2:0] = rgb2dvi_0_TMDS_DATA_N;
