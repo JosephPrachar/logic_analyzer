@@ -19,7 +19,7 @@
 #define RESP_OK   "Command Successful"
 #define RESP_FAIL "Command Error"
 
-extern to_write cmnd_buff;
+to_write cmnd_buff;
 extern XScuGic xInterruptController;
 
 #define UART_DEVICE_ID		XPAR_XUARTPS_0_DEVICE_ID
@@ -63,6 +63,8 @@ static void keyboard_task(void* param) {
 	(void) param;
 	TickType_t xNextWakeTime = xTaskGetTickCount();
 	XUartPs_Recv(&UartPs, (u8*)&input_char, 1);
+	cmnd_buff.head = 0;
+	cmnd_buff.tail = 0;
 	while (1) {
 		if (XUartPs_Recv(&UartPs, (u8*)&input_char, 1) == 1) {
 			if (input_char == 8 && pos != 0) { // backspace
@@ -76,7 +78,6 @@ static void keyboard_task(void* param) {
 			}
 			cmnd_buff.cmd_line[cmnd_buff.head] = input_char;
 			cmnd_buff.head = (cmnd_buff.head + 1) % LINE_LENGTH;
-			cmnd_buff.cmd_line[cmnd_buff.head] = '\0';
 		}
 		vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
 	}

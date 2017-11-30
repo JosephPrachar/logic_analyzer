@@ -20,7 +20,7 @@ extern SemaphoreHandle_t sem_data;
 
 #define DATA_SIZE (cur_pos - last_pos)
 
-to_write cmnd_buff;
+extern to_write cmnd_buff;
 /*
  * char descriptions
  */
@@ -123,16 +123,19 @@ void display_add_tasks(void) {
 static void display_task(void* param) {
 	static int reset = 0;
 	static int i = 0;
-
+	u8 tail;
 	(void)param;
 	TickType_t xNextWakeTime = xTaskGetTickCount();
 	display_screen_init();
 	while (1) {
 		if (xSemaphoreTake(sem_draw, 0xFFFFFFFF) == pdTRUE) {
+
+			tail = cmnd_buff.tail;
 			memcpy(&revert, &current_screen, sizeof(screen_state));
 			display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
 			DisplayChangeFrame(&dispCtrl, !cur_frame);
 			memcpy(&current_screen, &revert , sizeof(screen_state));
+			cmnd_buff.tail = tail;
 			display_draw(pFrames[!cur_frame], pFrames[cur_frame]);
 			cur_frame = (!cur_frame);
 			vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
@@ -268,15 +271,22 @@ static void display_clear_screen(u8 *destFrame, u8 *sourceFrame){
 
 	}
 	for(i = 0; i < 8; i++){
-			graphics_print_string(5, 208 + (i * 90), temp, 2, destFrame, 1);
-			graphics_print_string(5, 208 + (i * 90), temp, 2, sourceFrame, 1);
-			temp[8]++;
+		cmnd_buff.head = 9;
+		cmnd_buff.tail = 0;
+		graphics_print_string(5, 208 + (i * 90), temp, 2, destFrame, 1);
+		cmnd_buff.head = 9;
+		cmnd_buff.tail = 0;
+		graphics_print_string(5, 208 + (i * 90), temp, 2, sourceFrame, 1);
+		temp[8]++;
 	}
+	cmnd_buff.head = 1;
+	cmnd_buff.tail = 0;
 	graphics_print_string(5, 3, ">",2, destFrame, 0);
+	cmnd_buff.head = 1;
+	cmnd_buff.tail = 0;
 	graphics_print_string(5, 3, ">",2, sourceFrame, 0);
-
-
-
+	cmnd_buff.head = 0;
+	cmnd_buff.tail = 0;
 
 }
 static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue) {
@@ -293,7 +303,6 @@ static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red
 
 static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup){
 	int i = 0;
-	int temp;
 	while(cmnd_buff.tail != cmnd_buff.head){
 		if(string[i] == '\n'){
 			y = y + (CHAR_HEIGHT * scale + 3);
@@ -310,7 +319,8 @@ static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *fra
 
 		}else if( string[i] == 8){
 			if( current_screen.cmd_line_x > 3 + 5 * scale + 2){
-				x = x - 5 * scale + 2;
+				graphics_print_char(x , y, ' ', scale, frame);
+				x = x - 5 * scale - 2;
 				graphics_print_char(x , y, ' ', scale, frame);
 				current_screen.cmd_line_x = x;
 			}
