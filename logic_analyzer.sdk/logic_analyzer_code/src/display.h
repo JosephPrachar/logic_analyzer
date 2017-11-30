@@ -8,11 +8,6 @@
 #define HEIGHT 900
 #define FRAME_SIZE (WIDTH*HEIGHT*3)
 
-typedef struct{
-	char cmd_line[LINE_LENGTH];
-	u8 head;
-	u8 tail;
-}to_write;
 
 typedef struct{
 	u16 cmd_line_y;

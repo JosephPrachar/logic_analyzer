@@ -12,13 +12,15 @@
 #include "xil_cache.h"
 #include "xparameters.h"
 
+extern u8 scale;
 extern u8 data_buffer[DATA_BUF_SIZE];
 extern u16 last_pos;
 extern u16 cur_pos;
 extern SemaphoreHandle_t sem_draw;
 extern SemaphoreHandle_t sem_data;
 
-#define DATA_SIZE (cur_pos - last_pos)
+#define DATA_SIZE (1450 * scale)
+
 
 extern char cmd_line_buf[LINE_LENGTH];
 /*
@@ -55,7 +57,6 @@ static int cur_frame = 0;
  * data for screen
  */
 screen_state current_screen;
-static screen_state revert;
 
 static void display_task(void* param);
 static void display_draw(u8 *buffer_frame, u8 *destFrame);
@@ -65,7 +66,6 @@ static void graphics_update_screen( u8 *next_screen, u8 scale);
 static void graphics_print_char(u16 x, u16 y, char a, int scale, u8 *frame);
 static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup);
 static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue);
-static void graphics_copy_rect(u16 x1, u16 y1, u16 x2, u16 y2, u16 x3, u16 y3, u8 *buffer);
 
 
 void display_init(void) {
@@ -121,18 +121,15 @@ void display_add_tasks(void) {
 }
 
 static void display_task(void* param) {
-	static int reset = 0;
 	(void)param;
 	TickType_t xNextWakeTime = xTaskGetTickCount();
 	display_screen_init();
 	while (1) {
 		if (xSemaphoreTake(sem_draw, 0xFFFFFFFF) == pdTRUE) {
 
-			memcpy(&revert, &current_screen, sizeof(screen_state));
+
 			display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
 			DisplayChangeFrame(&dispCtrl, !cur_frame);
-			memcpy(&current_screen, &revert , sizeof(screen_state));
-			display_draw(pFrames[!cur_frame], pFrames[cur_frame]);
 			cur_frame = (!cur_frame);
 			vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
 			xSemaphoreGive(sem_data);
@@ -142,11 +139,9 @@ static void display_task(void* param) {
 
 static void display_draw(u8 *sourceFrame, u8 *destFrame) {
 	//graphics_draw_line_real(0, 200, 1600, 200, destFrame);
-	static int reset = 0;
-	static int i = 0;
 
 
-	graphics_update_screen(destFrame, 10);
+	graphics_update_screen(destFrame, scale);
 	Xil_DCacheFlushRange((unsigned int) destFrame, FRAME_SIZE);
 
 
@@ -173,52 +168,46 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 
 
 	for(int k = 0; k < 8; k++){
-		if(!current_screen.channel_enable[k]){
-			continue;
-		}
-		if(1599 - current_screen.channel_loc[k] > DATA_SIZE / scale){
-			//graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
-			//					current_screen.channel_loc[k] + DATA_SIZE /scale,
-				//				259 + k * 90, next_screen, 255, 255, 255);
-		}else{
-			int diff = 1599 - current_screen.channel_loc[k];
-			graphics_fill_rect(current_screen.channel_loc[k], 181 + k * 90,
-									current_screen.channel_loc[k] + diff,
-									259 + k * 90, next_screen, 255, 255, 255);
-			graphics_fill_rect(155, 181 + k * 90, 155 + DATA_SIZE / scale - diff,
-									259 + k * 90, next_screen, 255, 255, 255);
-		}
+		graphics_fill_rect(150, 181 + k * 90, 1599, 259 + k * 90, next_screen, 255, 255, 255);
 	}
 
 
-	for(int i = 0; i < DATA_SIZE; i+= scale){
+	for(int i = 0; i < DATA_SIZE; i += scale){
 		for(int j = 0; j < 8; j++){
 			if(!current_screen.channel_enable[j]){
-				continue;
+				if(current_screen.channel_low_or_high[j] != 0){
+					x1 = current_screen.channel_loc[j];
+					x2 = current_screen.channel_loc[j] + current_screen.channel_line_len[j];
+					y2 = current_screen.channel_height[j] + 77;
+					y1 = current_screen.channel_height[j];
+					current_screen.channel_height[j] = y2;
+					graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 53, 209, 0);
+					graphics_fill_rect(x2, y1, x2, y2 , next_screen,  53, 209, 0);
+					current_screen.channel_loc[j] = x2 + 1;
+					current_screen.channel_low_or_high[j] = 0;
+					current_screen.channel_line_len[j] = 0;
+				}
+				else{
+					current_screen.channel_line_len[j] = current_screen.channel_line_len[j] + 1;
+				}
 			}
-			if(current_screen.channel_loc[j] + current_screen.channel_line_len[j] == 1599){
-				x1 = current_screen.channel_loc[j];
-				x2 = 1599;
-				y1 = current_screen.channel_height[j];
-				graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
-				current_screen.channel_loc[j] = 155;
-				current_screen.channel_line_len[j] = 0;
-			}else if((current_screen.channel_low_or_high[j] << j) != ((data_buffer+cur_pos)[i] & (mask << j))){
+
+			if((current_screen.channel_low_or_high[j] << j) != (data_buffer[i] & (mask << j))){
 				x1 = current_screen.channel_loc[j];
 				x2 = current_screen.channel_loc[j] + current_screen.channel_line_len[j];
 				if(current_screen.channel_low_or_high[j]){
 					y2 = current_screen.channel_height[j] + 77;
 					y1 = current_screen.channel_height[j];
 					current_screen.channel_height[j] = y2;
-					graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
+					graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 53, 209, 0);
 				}else{
 					y1 = current_screen.channel_height[j] - 77;
 					y2 = current_screen.channel_height[j];
 					current_screen.channel_height[j] = y1;
-					graphics_fill_rect(x1, y2, x2, y2 + 1, next_screen, 0, 0, 0);
+					graphics_fill_rect(x1, y2, x2, y2 + 1, next_screen, 53, 209, 0);
 				}
 
-				graphics_fill_rect(x2, y1, x2, y2, next_screen, 0, 0, 0);
+				graphics_fill_rect(x2, y1, x2, y2, next_screen, 53, 209, 0);
 				current_screen.channel_loc[j] = x2 + 1;
 				current_screen.channel_low_or_high[j] = !current_screen.channel_low_or_high[j];
 				current_screen.channel_line_len[j] = 0;
@@ -228,23 +217,11 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 		}
 	}
 	for(int j = 0; j < 8; j++){
-		if(!current_screen.channel_enable[j]){
-			continue;
-		}
 			x1 = current_screen.channel_loc[j];
-				x2 = current_screen.channel_loc[j] + current_screen.channel_line_len[j];
-				y1 = current_screen.channel_height[j];
-				graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 0, 0, 0);
-				current_screen.channel_loc[j] = x2;
-				current_screen.channel_line_len[j] = 0;
-				if(current_screen.channel_loc[j] + 20 < 1599){
-					if(current_screen.channel_low_or_high[j]){
-						y1 = current_screen.channel_height[j];
-					}else{
-						y1 = current_screen.channel_height[j] - 77;
-					}
-					graphics_fill_rect(x2, y1, x2 + 20, y1 + 78, next_screen, 255, 255, 255);
-				}
+			y1 = current_screen.channel_height[j];
+			graphics_fill_rect(x1, y1, 1599, y1 + 1, next_screen, 53, 209, 0);
+			current_screen.channel_loc[j] = 150;
+			current_screen.channel_line_len[j] = 0;
 	}
 
 	graphics_fill_rect(16, 2, 16 + scale * (CHAR_WIDTH +2) * LINE_LENGTH, 2 + CHAR_HEIGHT * scale, next_screen, 255, 255, 255);
@@ -258,14 +235,14 @@ static void display_clear_screen(u8 *destFrame, u8 *sourceFrame){
 	int i;
 	graphics_fill_rect(0, 149, 1599, 151, destFrame, 0, 0, 0);
 	graphics_fill_rect(0, 174, 1599, 176, destFrame, 0, 0, 0);
-	graphics_fill_rect(149, 150, 151, 899, destFrame, 0, 0, 0);
+	graphics_fill_rect(144, 150, 146, 899, destFrame, 0, 0, 0);
 	graphics_fill_rect(0, 149, 1599, 151, sourceFrame, 0, 0, 0);
 	graphics_fill_rect(0, 174, 1599, 176, sourceFrame, 0, 0, 0);
-	graphics_fill_rect(149, 150, 151, 899, sourceFrame, 0, 0, 0);
+	graphics_fill_rect(144, 150, 146, 899, sourceFrame, 0, 0, 0);
 
 	for(i = 0; i < 8; i++){
-		graphics_fill_rect(151, 264 + i * 90, 1599, 266 + i * 90, destFrame, 130, 130, 130);
-		graphics_fill_rect(151, 264 + i * 90, 1599, 266 + i * 90, sourceFrame, 130, 130, 130);
+		graphics_fill_rect(146, 264 + i * 90, 1599, 266 + i * 90, destFrame, 0, 0, 0);
+		graphics_fill_rect(146, 264 + i * 90, 1599, 266 + i * 90, sourceFrame, 0, 0, 0);
 
 	}
 	for(i = 0; i < 8; i++){
