@@ -109,7 +109,7 @@ static u8* bram_base = (u8*)0xC0000000;
 static XAxiCdma AxiCdmaInstance;	/* Instance of the XAxiCdma */
 static XGpio xGpio;
 static u32 sw_reg = 0x80989680; // enable with 10 samples/sec
-u8 scale = 6;
+u8 scale = 1;
 /* Shared variables used to test the callbacks.
  */
 static volatile int Done = 0;	/* Dma transfer is done */
@@ -121,6 +121,7 @@ static void scope_task(void* param) ;
 void scope_set_freq(unsigned int freq) {
 	unsigned int div = SCOPE_CLK_IN / freq;
 	if (div > 0xFFFFFF) div = 0xFFFFFF;
+	if (div == 1) div = 0;
 	sw_reg &= ~SCOPE_SW_REG_CLK_DIV_MSK;
 	sw_reg |= SCOPE_SW_REG_CLK_DIV_MSK & div;
 	XGpio_DiscreteWrite(&xGpio, SCOPE_SW_REG, sw_reg);

@@ -224,7 +224,7 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 			current_screen.channel_line_len[j] = 0;
 	}
 
-	graphics_fill_rect(16, 2, 16 + scale * (CHAR_WIDTH +2) * LINE_LENGTH, 2 + CHAR_HEIGHT * scale, next_screen, 255, 255, 255);
+	graphics_fill_rect(3, 2, 16 + scale * (CHAR_WIDTH +2) * LINE_LENGTH, 3 + CHAR_HEIGHT * 2, next_screen, 255, 255, 255);
 	graphics_print_string(3, 2, ">", 2, next_screen, 0);
 	graphics_print_string(16, 2,  cmd_line_buf , 2, next_screen, 0);
 }

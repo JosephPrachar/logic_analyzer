@@ -14,7 +14,17 @@
 
 #define CMD_START "start"
 #define CMD_STOP  "stop"
-#define CMD_FREQ  "set_freq"
+#define CMD_FREQ1  "set_freq_1"
+#define CMD_FREQ10  "set_freq_10"
+#define CMD_FREQ100  "set_freq_100"
+#define CMD_FREQ1k  "set_freq_1k"
+#define CMD_FREQ10k  "set_freq_10k"
+#define CMD_FREQ100k  "set_freq_100k"
+#define CMD_FREQ1m  "set_freq_1m"
+#define CMD_FREQ10m  "set_freq_10m"
+#define CMD_FREQ20m  "set_freq_20m"
+#define CMD_FREQ100m  "set_freq_100m"
+
 
 #define RESP_OK   "Command Successful"
 #define RESP_FAIL "Command Error"
@@ -85,8 +95,26 @@ static int keyboard_parse_line(void) {
 		scope_enable();
 	} else if (!strcmp(cmd_line_buf, CMD_STOP)) {
 		scope_disable();
-	} else if (!strcmp(cmd_line_buf, CMD_FREQ)) {
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ1)) {
 		scope_set_freq(1);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ10)){
+		scope_set_freq(10);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ100)) {
+		scope_set_freq(100);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ1k)){
+		scope_set_freq(1000);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ10k)) {
+		scope_set_freq(10000);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ100k)) {
+		scope_set_freq(100000);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ1m)) {
+		scope_set_freq(1000000);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ10m)) {
+		scope_set_freq(10000000);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ20m)) {
+		scope_set_freq(20000000);
+	} else if (!strcmp(cmd_line_buf, CMD_FREQ100m)) {
+		scope_set_freq(100000000);
 	} else {
 		response = RESP_FAIL;
 		return 1;
