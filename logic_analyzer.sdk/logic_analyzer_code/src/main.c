@@ -161,7 +161,7 @@ XScuWdt xWatchDogInstance;
 other modules. */
 XScuGic xInterruptController;
 
-u8 extra_buf[10];
+/* Global data */
 u8 data_buffer[DATA_BUF_SIZE];
 u16 last_pos;
 u16 cur_pos;
@@ -170,10 +170,12 @@ SemaphoreHandle_t sem_data;
 
 int main(void)
 {
-	/* See http://www.freertos.org/RTOS-Xilinx-Zynq.html for instructions. */
-
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
+
+	/* Use counting semaphores to create a strict alternation between capturing
+	 * data and printing to screen. Each task waits on its sem then gives to
+	 * the other, unblocking it */
 	sem_draw = xSemaphoreCreateCounting(1, 0);
 	sem_data = xSemaphoreCreateCounting(1, 1);
 

@@ -12,60 +12,35 @@
 #include "xil_cache.h"
 #include "xparameters.h"
 
+/* External declaration of global data */
 extern u8 scale;
 extern u8 data_buffer[DATA_BUF_SIZE];
 extern u16 last_pos;
 extern u16 cur_pos;
 extern SemaphoreHandle_t sem_draw;
 extern SemaphoreHandle_t sem_data;
-
-#define DATA_SIZE (1450 * scale)
-
-
 extern char cmd_line_buf[LINE_LENGTH];
-/*
- * char descriptions
- */
-#define CHAR_HEIGHT 			8
-#define CHAR_WIDTH				5
-#define SEPERATION_WIDTH		2
 
-/*
- * XPAR redefines
- */
-#define DYNCLK_BASEADDR 		XPAR_AXI_DYNCLK_0_BASEADDR
-#define VDMA_ID 				XPAR_AXIVDMA_0_DEVICE_ID
-#define HDMI_OUT_VTC_ID 		XPAR_V_TC_0_DEVICE_ID
-#define SCU_TIMER_ID 			XPAR_SCUTIMER_DEVICE_ID
-#define UART_BASEADDR 			XPAR_PS7_UART_1_BASEADDR
-#define WAIT_TIME_MS            ( 33 / portTICK_PERIOD_MS ) /* 100 ms */
-#define xy_to_i(x, y)			(WIDTH * y * 3 + x * 3)
-#define ABS(x) 					x < 0 ? -x : x;
-/*
- * Display and Video Driver structs
- */
+/* Display and Video Driver structs */
 static DisplayCtrl dispCtrl;
 static XAxiVdma vdma;
 
-
-/* Framebuffers for video data */
+/* 2 Framebuffers for video data */
 static u8 frameBuf[DISPLAY_NUM_FRAMES][FRAME_SIZE] __attribute__((aligned(0x20)));
 static u8 *pFrames[DISPLAY_NUM_FRAMES]; //array of pointers to the frame buffers
 static int cur_frame = 0;
 
-/*
- * data for screen
- */
-screen_state current_screen;
+/* data for screen */
+static screen_state current_screen;
 
 static void display_task(void* param);
-static void display_draw(u8 *buffer_frame, u8 *destFrame);
+static void display_draw(u8 *destFrame);
 static void display_clear_screen(u8 *destFrame, u8 *sourceFrame);
 static void display_screen_init(void);
-static void graphics_update_screen( u8 *next_screen, u8 scale);
-static void graphics_print_char(u16 x, u16 y, char a, int scale, u8 *frame);
-static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup);
-static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue);
+static void display_update_screen( u8 *next_screen, u8 scale);
+static void display_print_char(u16 x, u16 y, char a, int scale, u8 *frame);
+static void display_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup);
+static void display_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue);
 
 
 void display_init(void) {
@@ -122,29 +97,22 @@ void display_add_tasks(void) {
 
 static void display_task(void* param) {
 	(void)param;
-	TickType_t xNextWakeTime = xTaskGetTickCount();
 	display_screen_init();
+
 	while (1) {
 		if (xSemaphoreTake(sem_draw, 0xFFFFFFFF) == pdTRUE) {
-
-
-			display_draw(pFrames[cur_frame], pFrames[!cur_frame]);
+			display_draw(pFrames[!cur_frame]);
 			DisplayChangeFrame(&dispCtrl, !cur_frame);
-			cur_frame = (!cur_frame);
-			vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
+			cur_frame = !cur_frame;
+
 			xSemaphoreGive(sem_data);
 		}
 	}
 }
 
-static void display_draw(u8 *sourceFrame, u8 *destFrame) {
-	//graphics_draw_line_real(0, 200, 1600, 200, destFrame);
-
-
-	graphics_update_screen(destFrame, scale);
+static void display_draw(u8 *destFrame) {
+	display_update_screen(destFrame, scale);
 	Xil_DCacheFlushRange((unsigned int) destFrame, FRAME_SIZE);
-
-
 }
 
 static void display_screen_init(void) {
@@ -162,17 +130,17 @@ static void display_screen_init(void) {
 	display_clear_screen(pFrames[0], pFrames[1]);
 }
 
-static void graphics_update_screen(u8 *next_screen, u8 scale) {
+static void display_update_screen(u8 *next_screen, u8 scale) {
 	u8 mask = 1;
 	u16 x1, x2, y1, y2;
 
 
 	for(int k = 0; k < 8; k++){
-		graphics_fill_rect(150, 181 + k * 90, 1599, 259 + k * 90, next_screen, 255, 255, 255);
+		display_fill_rect(150, 181 + k * 90, 1599, 259 + k * 90, next_screen, 255, 255, 255);
 	}
 
 
-	for(int i = 0; i < DATA_SIZE; i += scale){
+	for(int i = 5; i < DATA_SIZE; i += scale){
 		for(int j = 0; j < 8; j++){
 			if(!current_screen.channel_enable[j]){
 				if(current_screen.channel_low_or_high[j] != 0){
@@ -181,8 +149,8 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 					y2 = current_screen.channel_height[j] + 77;
 					y1 = current_screen.channel_height[j];
 					current_screen.channel_height[j] = y2;
-					graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 53, 209, 0);
-					graphics_fill_rect(x2, y1, x2, y2 , next_screen,  53, 209, 0);
+					display_fill_rect(x1, y1, x2, y1 + 1, next_screen, 53, 209, 0);
+					display_fill_rect(x2, y1, x2, y2 , next_screen,  53, 209, 0);
 					current_screen.channel_loc[j] = x2 + 1;
 					current_screen.channel_low_or_high[j] = 0;
 					current_screen.channel_line_len[j] = 0;
@@ -199,15 +167,15 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 					y2 = current_screen.channel_height[j] + 77;
 					y1 = current_screen.channel_height[j];
 					current_screen.channel_height[j] = y2;
-					graphics_fill_rect(x1, y1, x2, y1 + 1, next_screen, 53, 209, 0);
+					display_fill_rect(x1, y1, x2, y1 + 1, next_screen, 53, 209, 0);
 				}else{
 					y1 = current_screen.channel_height[j] - 77;
 					y2 = current_screen.channel_height[j];
 					current_screen.channel_height[j] = y1;
-					graphics_fill_rect(x1, y2, x2, y2 + 1, next_screen, 53, 209, 0);
+					display_fill_rect(x1, y2, x2, y2 + 1, next_screen, 53, 209, 0);
 				}
 
-				graphics_fill_rect(x2, y1, x2, y2, next_screen, 53, 209, 0);
+				display_fill_rect(x2, y1, x2, y2, next_screen, 53, 209, 0);
 				current_screen.channel_loc[j] = x2 + 1;
 				current_screen.channel_low_or_high[j] = !current_screen.channel_low_or_high[j];
 				current_screen.channel_line_len[j] = 0;
@@ -219,42 +187,42 @@ static void graphics_update_screen(u8 *next_screen, u8 scale) {
 	for(int j = 0; j < 8; j++){
 			x1 = current_screen.channel_loc[j];
 			y1 = current_screen.channel_height[j];
-			graphics_fill_rect(x1, y1, 1599, y1 + 1, next_screen, 53, 209, 0);
+			display_fill_rect(x1, y1, 1599, y1 + 1, next_screen, 53, 209, 0);
 			current_screen.channel_loc[j] = 150;
 			current_screen.channel_line_len[j] = 0;
 	}
 
-	graphics_fill_rect(3, 2, 16 + scale * (CHAR_WIDTH +2) * LINE_LENGTH, 3 + CHAR_HEIGHT * 2, next_screen, 255, 255, 255);
-	graphics_print_string(3, 2, ">", 2, next_screen, 0);
-	graphics_print_string(16, 2,  cmd_line_buf , 2, next_screen, 0);
+	display_fill_rect(3, 2, 16 + scale * (CHAR_WIDTH +2) * LINE_LENGTH, 3 + CHAR_HEIGHT * 2, next_screen, 255, 255, 255);
+	display_print_string(3, 2, ">", 2, next_screen, 0);
+	display_print_string(16, 2,  cmd_line_buf , 2, next_screen, 0);
 }
-
 
 static void display_clear_screen(u8 *destFrame, u8 *sourceFrame){
 	char temp[10] = "channel 0";
 	int i;
-	graphics_fill_rect(0, 149, 1599, 151, destFrame, 0, 0, 0);
-	graphics_fill_rect(0, 174, 1599, 176, destFrame, 0, 0, 0);
-	graphics_fill_rect(144, 150, 146, 899, destFrame, 0, 0, 0);
-	graphics_fill_rect(0, 149, 1599, 151, sourceFrame, 0, 0, 0);
-	graphics_fill_rect(0, 174, 1599, 176, sourceFrame, 0, 0, 0);
-	graphics_fill_rect(144, 150, 146, 899, sourceFrame, 0, 0, 0);
+	display_fill_rect(0, 149, 1599, 151, destFrame, 0, 0, 0);
+	display_fill_rect(0, 174, 1599, 176, destFrame, 0, 0, 0);
+	display_fill_rect(144, 150, 146, 899, destFrame, 0, 0, 0);
+	display_fill_rect(0, 149, 1599, 151, sourceFrame, 0, 0, 0);
+	display_fill_rect(0, 174, 1599, 176, sourceFrame, 0, 0, 0);
+	display_fill_rect(144, 150, 146, 899, sourceFrame, 0, 0, 0);
 
 	for(i = 0; i < 8; i++){
-		graphics_fill_rect(146, 264 + i * 90, 1599, 266 + i * 90, destFrame, 0, 0, 0);
-		graphics_fill_rect(146, 264 + i * 90, 1599, 266 + i * 90, sourceFrame, 0, 0, 0);
+		display_fill_rect(146, 264 + i * 90, 1599, 266 + i * 90, destFrame, 0, 0, 0);
+		display_fill_rect(146, 264 + i * 90, 1599, 266 + i * 90, sourceFrame, 0, 0, 0);
 
 	}
 	for(i = 0; i < 8; i++){
-		graphics_print_string(5, 208 + (i * 90), temp, 2, destFrame, 1);
-		graphics_print_string(5, 208 + (i * 90), temp, 2, sourceFrame, 1);
+		display_print_string(5, 208 + (i * 90), temp, 2, destFrame, 1);
+		display_print_string(5, 208 + (i * 90), temp, 2, sourceFrame, 1);
 		temp[8]++;
 	}
-	graphics_print_string(3, 2, ">",2, destFrame, 0);
-	graphics_print_string(3, 2, ">",2, sourceFrame, 0);
+	display_print_string(3, 2, ">",2, destFrame, 0);
+	display_print_string(3, 2, ">",2, sourceFrame, 0);
 
 }
-static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue) {
+
+static void display_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red, u8 green, u8 blue) {
  u16 i, j;
  u32 k;
  for (i = x1; i <= x2; i++)
@@ -266,36 +234,34 @@ static void graphics_fill_rect(u16 x1, u16 y1, u16 x2, u16 y2, u8 *frame, u8 red
      }
 }
 
-static void graphics_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup){
+static void display_print_string(u16 x, u16 y, char *string, int scale, u8 *frame, u8 setup){
 	int i = 0;
 	while(string[i]){
-			graphics_print_char(x, y, string[i], scale, frame);
+			display_print_char(x, y, string[i], scale, frame);
 			x = x + 5 * scale + 2;
 			i++;
 	}
 	if(!setup){
-		graphics_print_char(x, y, '_', scale, frame);
+		display_print_char(x, y, '_', scale, frame);
 	}
 
 }
 
-
-void graphics_print_char(u16 x, u16 y, char a, int scale, u8 *frame) { /* int     scale */
+static void display_print_char(u16 x, u16 y, char a, int scale, u8 *frame) { /* int     scale */
 	u16 i, j, jbit, ibit, x1, y1;
 	for (i = 0, ibit = 0; ibit < CHAR_WIDTH; i += scale, ibit++){
 		for (j = 0, jbit = 0; jbit < CHAR_HEIGHT; j += scale, jbit++){
 			x1 = x + i + scale - 1;
 			y1 = y + j + scale - 1;
-        	if ((1<<jbit) & ascii_tab[a][ibit])
-        		graphics_fill_rect(x + i, y + j, x1, y1, frame, 0, 0, 0);
+        	if ((1<<jbit) & ascii_table[a][ibit])
+        		display_fill_rect(x + i, y + j, x1, y1, frame, 0, 0, 0);
             else
-            	graphics_fill_rect(x + i, y + j, x1, y1, frame, 255, 255, 255);
+            	display_fill_rect(x + i, y + j, x1, y1, frame, 255, 255, 255);
 		}
 	}
  }
 
-
-const u8 ascii_tab[128][5] = {
+const u8 ascii_table[128][5] = {
 /* non display chars */
 { 0x00, 0x00, 0x00, 0x00, 0x00},
 { 0x00, 0x00, 0x00, 0x00, 0x00},

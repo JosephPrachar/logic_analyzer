@@ -1,77 +1,3 @@
-/******************************************************************************
-*
-* Copyright (C) 2010 - 2015 Xilinx, Inc.  All rights reserved.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* Use of the Software is limited solely to applications:
-* (a) running on a Xilinx device, or
-* (b) that interact with a Xilinx device through a bus or interconnect.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-* XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-* OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-* Except as contained in this notice, the name of the Xilinx shall not be used
-* in advertising or otherwise to promote the sale, use or other dealings in
-* this Software without prior written authorization from Xilinx.
-*
-******************************************************************************/
-
-/*****************************************************************************/
-/**
- *
- * @file xaxicdma_example_simple_poll.c
- *
- * This file demonstrates how to use xaxicdma driver on the Xilinx AXI
- * CDMA core (AXICDMA) to transfer packets in simple transfer mode without
- * interrupt.
- *
- * The completion of the transfer is checked through polling. Using polling
- * mode can give better performance on an idle system, where the DMA engine
- * is lowly loaded, and the application has nothing else to do. The polling
- * mode can yield better turn-around time for DMA transfers.
- *
- * Modify NUMBER_OF_TRANSFERS for a different number of simple transfer to be
- * done in this test.
- *
- * To see the debug print, you need a Uart16550 or uartlite in your system,
- * and please set "-DDEBUG" in your compiler options for the example, also
- * comment out the "#undef DEBUG" in xdebug.h. You need to rebuild your
- * software executable.
- *
- * <pre>
- * MODIFICATION HISTORY:
- *
- * Ver   Who  Date     Changes
- * ----- ---- -------- -------------------------------------------------------
- * 1.00a jz   07/30/10 First release
- * 2.01a rkv  01/28/11 Modified function prototype of
- * 		       XAxiCdma_SimplePollExample to function taking only one
- * 		       arguments i.e. device id.
- * 2.01a srt  03/06/12 Modified Flushing and Invalidation of Caches to fix CRs
- *		       648103, 648701.
- * 4.3   ms   01/22/17 Modified xil_printf statement in main function to
- *            ensure that "Successfully ran" and "Failed" strings are
- *            available in all examples. This is a fix for CR-965028.
- *       ms   04/05/17 Modified Comment lines in functions to
- *                     recognize it as documentation block for doxygen
- *                     generation of examples.
- * </pre>
- *
- ****************************************************************************/
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
@@ -82,6 +8,7 @@
 #include "scope.h"
 #include "xgpio.h"
 
+/* External declarations of global data */
 extern u8 data_buffer[DATA_BUF_SIZE];
 extern u16 last_pos;
 extern u16 cur_pos;
@@ -92,26 +19,15 @@ extern SemaphoreHandle_t sem_data;
 extern void xil_printf(const char *format, ...);
 #endif
 
-static u8* bram_base = (u8*)0xC0000000;
-#define SCOPE_CLK_IN 100000000
-
-#define SCOPE_SW_REG 1
-#define SCOPE_HW_REG 2
-
-#define SCOPE_SW_REG_CLK_DIV_MSK   0x00FFFFFF
-#define SCOPE_SW_REG_ENABLE_MSK    0x80000000
-
-#define SCOPE_HW_REG_ADDR_MSK 0x00001FFF
-
-
 #define DMA_RETRIES 5
+
+/* Global data */
+u8 scale = 1;
 
 static XAxiCdma AxiCdmaInstance;	/* Instance of the XAxiCdma */
 static XGpio xGpio;
 static u32 sw_reg = 0x80989680; // enable with 10 samples/sec
-u8 scale = 1;
-/* Shared variables used to test the callbacks.
- */
+
 static volatile int Done = 0;	/* Dma transfer is done */
 static volatile int Error = 0;	/* Dma Error occurs */
 
@@ -183,37 +99,14 @@ void scope_add_tasks(void) {
 		NULL );								/* The task handle is not required, so NULL is passed. */
 }
 
-
 static void scope_task(void* param) {
 	(void) param;
-	int Status;
-	u32 reg;
-	u16 next_pos = 0;
-	u16 size;
-	TickType_t xNextWakeTime = xTaskGetTickCount();
 
 	while (1) {
 		if (xSemaphoreTake(sem_data, 0xFFFFFFFF) == pdTRUE) {
-			reg = XGpio_DiscreteRead(&xGpio, SCOPE_HW_REG);
-			next_pos = reg & SCOPE_HW_REG_ADDR_MSK;
-			Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, data_buffer, BRAM_SIZE);
-			Xil_DCacheFlushRange((UINTPTR)data_buffer, DATA_BUF_SIZE);
-			if (next_pos < cur_pos) {
-				// hw data module rolled over
-				size = (next_pos + BRAM_SIZE) - cur_pos;
-				// dma remaining bytes from the top of the bram address space
-				//Status = scope_dma_transfer(&AxiCdmaInstance, bram_base + cur_pos, data_buffer + cur_pos, BRAM_SIZE - cur_pos);
-				// dma rollover bytes from base bram address to the extra space in the dram buffer
-				// so there will always be continuous pieces of data
-				//Status = scope_dma_transfer(&AxiCdmaInstance, bram_base, data_buffer + BRAM_SIZE, next_pos);
-			} else {
-				size = next_pos - cur_pos;
-				//Status = scope_dma_transfer(&AxiCdmaInstance, bram_base + cur_pos, cur_pos + data_buffer, size);
-			}
-
-
-			last_pos = cur_pos;
-			cur_pos = next_pos;
+			/* TODO: Figure out why we are not getting good current write address
+			 * information and update this to only dma new chunks of data */
+			scope_dma_transfer(&AxiCdmaInstance, bram_base, data_buffer, BRAM_SIZE);
 
 			xSemaphoreGive(sem_draw);
 		}
@@ -224,12 +117,6 @@ static void scope_task(void* param) {
 static int scope_dma_transfer(XAxiCdma *InstancePtr, u8* src, u8* dest, int num)
 {
 	int Status;
-
-
-	/* Flush the SrcBuffer before the DMA transfer, in case the Data Cache
-	 * is enabled
-	 */
-
 
 	/* Try to start the DMA transfer
 	 */
@@ -271,6 +158,10 @@ static int scope_dma_transfer(XAxiCdma *InstancePtr, u8* src, u8* dest, int num)
 		 */
 		return XST_FAILURE;
 	}
+
+	/* Flush the destbuffer after the DMA transfer, in case the Data Cache
+	 * is enabled */
+	Xil_DCacheFlushRange((UINTPTR)dest, num);
 
 	return XST_SUCCESS;
 }
