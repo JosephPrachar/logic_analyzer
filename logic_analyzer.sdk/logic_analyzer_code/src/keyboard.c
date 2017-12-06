@@ -59,7 +59,7 @@ static void keyboard_task(void* param) {
 				cmd_line_buf[pos++] = input_char;
 			}
 		}
-		/* Poll at 10Hz */
+		/* Poll at 30Hz */
 		vTaskDelayUntil(&xNextWakeTime, WAIT_TIME_MS);
 	}
 }

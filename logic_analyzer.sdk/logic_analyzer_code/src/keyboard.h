@@ -22,7 +22,7 @@
 #define RESP_FAIL "Command Error"
 
 #define UART_DEVICE_ID		XPAR_XUARTPS_0_DEVICE_ID
-#define WAIT_TIME_MS        ( 100 / portTICK_PERIOD_MS )
+#define WAIT_TIME_MS        ( 33 / portTICK_PERIOD_MS )
 
 void keyboard_init(void);
 void keyboard_add_tasks(void);
